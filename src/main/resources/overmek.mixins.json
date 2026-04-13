@@ -4,12 +4,13 @@
   "package": "com.hewiegui.overmek.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinMekanismTileContainer"
+    "MixinMekanismTileContainer",
+    "MixinTileEntityProgressMachine"
   ],
   "client": [
     "MixinGuiMekanism"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

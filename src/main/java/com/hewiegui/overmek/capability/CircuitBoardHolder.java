@@ -1,8 +1,10 @@
 package com.hewiegui.overmek.capability;
 
+import com.hewiegui.overmek.item.CircuitBoardItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -22,11 +24,23 @@ public class CircuitBoardHolder implements ICircuitBoardHolder,
     private final LazyOptional<ICircuitBoardHolder> optional =
         LazyOptional.of(() -> this);
 
+    // 关联的 BlockEntity
+    private final BlockEntity blockEntity;
+
+    public CircuitBoardHolder(BlockEntity blockEntity) {
+        this.blockEntity = blockEntity;
+    }
+
     @Override
     public ItemStack getCircuitBoard() { return circuitBoard; }
 
     @Override
     public void setCircuitBoard(ItemStack stack) { this.circuitBoard = stack; }
+
+    @Override
+    public CompoundTag getPersistentData() {
+        return blockEntity != null ? blockEntity.getPersistentData() : null;
+    }
 
     // Capability 提供
     @Override

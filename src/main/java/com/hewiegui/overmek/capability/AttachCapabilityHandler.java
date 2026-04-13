@@ -10,15 +10,18 @@ import net.minecraftforge.fml.common.Mod;
 public class AttachCapabilityHandler {
 
     private static final ResourceLocation CIRCUIT_BOARD_CAP =
-        new ResourceLocation("overmek", "circuit_board");
+        ResourceLocation.fromNamespaceAndPath("overmek", "circuit_board");
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         BlockEntity be = event.getObject();
 
-        // 只给 Mekanism 的机器附加
+        // 加这行
+        System.out.println("[OverMek] AttachCap called for: " + be.getClass().getName());
+
         if (be.getClass().getName().startsWith("mekanism.common.tile")) {
-            event.addCapability(CIRCUIT_BOARD_CAP, new CircuitBoardHolder());
+            System.out.println("[OverMek] Attaching circuit board cap to: " + be.getClass().getName());
+            event.addCapability(CIRCUIT_BOARD_CAP, new CircuitBoardHolder(be));
         }
     }
 }

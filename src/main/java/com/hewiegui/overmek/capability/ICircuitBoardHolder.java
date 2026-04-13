@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.capability;
 
 import com.hewiegui.overmek.item.CircuitBoardItem;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public interface ICircuitBoardHolder {
@@ -11,21 +12,32 @@ public interface ICircuitBoardHolder {
     // 安装电路板
     void setCircuitBoard(ItemStack stack);
 
-    // 是否已安装电路板
+    // 获取关联的 BlockEntity 的 PersistentData
+    CompoundTag getPersistentData();
+
+    // 是否已安装电路板（动态从 PersistentData 读取）
     default boolean hasCircuitBoard() {
-        return !getCircuitBoard().isEmpty()
-            && getCircuitBoard().getItem() instanceof CircuitBoardItem;
+        if (getPersistentData() == null) return false;
+        if (!getPersistentData().contains("OverMekCircuitBoard")) return false;
+        ItemStack stack = ItemStack.of(getPersistentData().getCompound("OverMekCircuitBoard"));
+        return !stack.isEmpty() && stack.getItem() instanceof CircuitBoardItem;
     }
 
-    // 获取超频次数，没有电路板返回 0
+    // 获取超频次数，没有电路板返回 0（动态从 PersistentData 读取）
     default int getOverclockCount() {
-        if (!hasCircuitBoard()) return 0;
-        return ((CircuitBoardItem) getCircuitBoard().getItem()).getOverclockCount();
+        if (getPersistentData() == null) return 0;
+        if (!getPersistentData().contains("OverMekCircuitBoard")) return 0;
+        ItemStack stack = ItemStack.of(getPersistentData().getCompound("OverMekCircuitBoard"));
+        if (stack.isEmpty() || !(stack.getItem() instanceof CircuitBoardItem)) return 0;
+        return ((CircuitBoardItem) stack.getItem()).getOverclockCount();
     }
 
-    // 获取电路板等级，没有返回 -1
+    // 获取电路板等级，没有返回 -1（动态从 PersistentData 读取）
     default int getTier() {
-        if (!hasCircuitBoard()) return -1;
-        return ((CircuitBoardItem) getCircuitBoard().getItem()).getTier();
+        if (getPersistentData() == null) return -1;
+        if (!getPersistentData().contains("OverMekCircuitBoard")) return -1;
+        ItemStack stack = ItemStack.of(getPersistentData().getCompound("OverMekCircuitBoard"));
+        if (stack.isEmpty() || !(stack.getItem() instanceof CircuitBoardItem)) return -1;
+        return ((CircuitBoardItem) stack.getItem()).getTier();
     }
 }

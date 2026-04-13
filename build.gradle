@@ -33,6 +33,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            arg '-mixin.config=overmek.mixins.json'
             mods {
                 overmek { source sourceSets.main }
             }
@@ -40,6 +41,7 @@ minecraft {
         server {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
+            arg '-mixin.config=overmek.mixins.json'
             mods {
                 overmek { source sourceSets.main }
             }
@@ -58,7 +60,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
 
     // 改这里：用完整包编译，而不是只用 api 包
-    compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80")
+    implementation fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80")
     // Mekanism 完整包（运行时测试用）
     runtimeOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")
 
@@ -82,5 +84,19 @@ processResources {
 inputs.properties replaceProperties
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"     : "overmek",
+            "Specification-Vendor"    : "hewiegui",
+            "Specification-Version"   : "1",
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : project.jar.archiveVersion,
+            "Implementation-Vendor"   : "hewiegui",
+            "MixinConfigs"           : "overmek.mixins.json"
+        ])
     }
 }
