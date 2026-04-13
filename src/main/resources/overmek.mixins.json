@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "com.hewiegui.overmek.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinMekanismTileContainer"
+  ],
+  "client": [
+    "MixinGuiMekanism"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

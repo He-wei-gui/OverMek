@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/c/Program Files/Java/jdk-17/bin/javap.exe:*)",
+      "Bash(\"/c/Program Files \\(x86\\)/Common Files/Oracle/Java/java8path/javap.exe\" -p -)",
+      "Bash(unzip -l \"/c/Users/91588/.gradle/caches/modules-2/files-2.1/mekanism/Mekanism/1.20.1-10.4.16.80/9ed01888be88247191ede5701df81dd9213f1aae/Mekanism-1.20.1-10.4.16.80-all.jar\")"
+    ]
+  }
+}

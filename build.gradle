@@ -1,0 +1,86 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://modmaven.dev/' }
+        maven { url 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
+    }
+}
+
+plugins {
+    id 'net.minecraftforge.gradle' version '6.+'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+version = "${mod_version}"
+group = "com.yourname.overmek"
+archivesBaseName = 'overmek'
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    compileJava.options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                overmek { source sourceSets.main }
+            }
+        }
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                overmek { source sourceSets.main }
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
+
+    // 改这里：用完整包编译，而不是只用 api 包
+    compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80")
+    // Mekanism 完整包（运行时测试用）
+    runtimeOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")
+
+    // Mixin annotation processor
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+processResources {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version          : forge_version,
+            forge_version_range    : forge_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
+    ]
+inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties
+    }
+}

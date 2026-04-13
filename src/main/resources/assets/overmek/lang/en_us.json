@@ -1,0 +1,9 @@
+{
+    "item.overmek.basic_circuit_board": "Basic Circuit Board",
+    "item.overmek.advanced_circuit_board": "Advanced Circuit Board",
+    "item.overmek.elite_circuit_board": "Elite Circuit Board",
+    "item.overmek.ultimate_circuit_board": "Ultimate Circuit Board",
+    "itemGroup.overmek": "OverMek",
+    "tooltip.overmek.overclock_count": "Overclock: x%s",
+    "tooltip.overmek.parallel_hint": "§6Unlocks parallel processing at 1T energy"
+}
