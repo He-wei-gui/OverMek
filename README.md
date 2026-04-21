@@ -1,82 +1,51 @@
 # OverMek
 
-一个 Minecraft Forge 1.20.1 模组，为 Mekanism 添加电路板物品和功能扩展。
+OverMek is a Minecraft Forge 1.20.1 mod that extends Mekanism with installable circuit boards.
 
-## English
+## What It Does
 
-OverMek is a Minecraft Forge 1.20.1 mod that adds circuit board items and extends functionality for Mekanism.
+- Adds four circuit board items with different tiers.
+- Adds a dedicated upgrade slot to supported Mekanism machine containers.
+- Applies extra processing progress on the server based on the installed board.
 
-### Setup
-
-1. Open command line and navigate to the extracted folder
-2. Run `./gradlew genIntellijRuns` (IntelliJ IDEA)
-3. Open IDEA, import project, select `build.gradle`
-4. Refresh Gradle project
-5. Run configurations will appear for Client and Server
-
-### Build
-
-```bash
-./gradlew build
-```
-
-The compiled JAR will be in `build/libs/`.
-
-### Commands
-
-```bash
-./gradlew build          # Build mod JAR
-./gradlew runClient     # Launch Minecraft with mod
-./gradlew runServer     # Launch dedicated server with mod
-./gradlew clean         # Clean build artifacts
-```
-
----
-
-## 中文
-
-OverMek 是一个 Minecraft Forge 1.20.1 模组，为 Mekanism 添加电路板物品和功能扩展。
-
-### 环境要求
+## Environment
 
 - Minecraft 1.20.1
 - Forge 47.4.10
 - Java 17
+- Mekanism 10.4.16.80
 
-### 开发环境搭建
+## Development Setup
 
-1. 打开命令行，进入项目文件夹
-2. 运行 `./gradlew genIntellijRuns` (IntelliJ IDEA)
-3. 打开 IDEA，导入项目，选择 `build.gradle`
-4. 刷新 Gradle 项目
-5. 即可看到 Client 和 Server 运行配置
+1. Open a terminal in the project root.
+2. Run `./gradlew genIntellijRuns`.
+3. Import the project into IntelliJ IDEA using `build.gradle`.
+4. Refresh Gradle.
+5. Use the generated `runClient` or `runServer` configurations.
 
-### 构建
+## Common Commands
 
 ```bash
 ./gradlew build
+./gradlew runClient
+./gradlew runServer
+./gradlew clean
 ```
 
-编译后的 JAR 文件位于 `build/libs/`。
+The built JAR is written to `build/libs/`.
 
-### 常用命令
+## Current Architecture
 
-```bash
-./gradlew build          # 构建模组 JAR
-./gradlew runClient     # 启动带模组的 Minecraft 客户端
-./gradlew runServer     # 启动带模组的专用服务器
-./gradlew clean         # 清理构建产物
-```
+- `item/`: circuit board item definitions and tooltip behavior
+- `capability/`: machine-attached circuit board state
+- `mixin/`: Mekanism container and machine hooks
+- `registry/`: item and creative tab registration
 
-## 模组内容
+## Notes
 
-- **基础电路板** - 电路板物品，tier 0
-- **高级电路板** - 电路板物品，tier 1
-- **精英电路板** - 电路板物品，tier 2
-- **终极电路板** - 电路板物品，tier 3
+- Circuit board state is stored through a Forge capability attached to Mekanism block entities.
+- Overclock behavior is currently implemented with reflective access to Mekanism progress fields, so version upgrades should be tested carefully.
 
-通过 Forge Capability 系统与 Mekanism 机器集成。
-
-## 许可证
+## License
 
 All Rights Reserved

@@ -5,5 +5,6 @@
     "item.overmek.ultimate_circuit_board": "Ultimate Circuit Board",
     "itemGroup.overmek": "OverMek",
     "tooltip.overmek.overclock_count": "Overclock: x%s",
-    "tooltip.overmek.parallel_hint": "§6Unlocks parallel processing at 1T energy"
+    "tooltip.overmek.parallel_hint": "Unlocks parallel processing at 1T energy",
+    "tooltip.overmek.circuit_board_slot": "Install a circuit board here"
 }
