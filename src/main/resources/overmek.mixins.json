@@ -8,6 +8,9 @@
     "MixinTileEntityFactory",
     "MixinTileEntityProgressMachine"
   ],
+  "client": [
+    "client.MixinGuiMekanismTile"
+  ],
   "injectors": {
     "defaultRequire": 0
   }

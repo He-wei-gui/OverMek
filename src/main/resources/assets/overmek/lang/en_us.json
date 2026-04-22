@@ -6,5 +6,9 @@
     "itemGroup.overmek": "OverMek",
     "tooltip.overmek.overclock_count": "Overclock: x%s",
     "tooltip.overmek.parallel_hint": "Unlocks parallel processing at 1T energy",
-    "tooltip.overmek.circuit_board_slot": "Install a circuit board here"
+    "tooltip.overmek.circuit_board_slot": "Install a circuit board here",
+    "tooltip.overmek.no_circuit_board": "No circuit board installed",
+    "tooltip.overmek.current_speed_multiplier": "Current speed: x%s",
+    "tooltip.overmek.current_overclock_bonus": "Current overclock bonus: +%s",
+    "tooltip.overmek.current_ticks_required": "Current processing time: %s t"
 }

@@ -4,8 +4,8 @@ import com.hewiegui.overmek.capability.ICircuitBoardHolder;
 import com.hewiegui.overmek.item.CircuitBoardItem;
 import com.mojang.logging.LogUtils;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
-import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.slot.InventoryContainerSlot;
+import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.BasicInventorySlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,11 +17,15 @@ public class CircuitBoardInventorySlot extends BasicInventorySlot {
 
     private final ICircuitBoardHolder holder;
     private final BlockEntity blockEntity;
+    private final int slotX;
+    private final int slotY;
 
     public CircuitBoardInventorySlot(ICircuitBoardHolder holder, BlockEntity blockEntity, int x, int y) {
         super(1, manualOnly, manualOnly, stack -> stack.getItem() instanceof CircuitBoardItem, null, x, y);
         this.holder = holder;
         this.blockEntity = blockEntity;
+        this.slotX = x;
+        this.slotY = y;
         setSlotType(ContainerSlotType.EXTRA);
         setSlotOverlay(SlotOverlay.UPGRADE);
         ItemStack stack = holder.getCircuitBoard();
@@ -39,7 +43,7 @@ public class CircuitBoardInventorySlot extends BasicInventorySlot {
 
     @Override
     public InventoryContainerSlot createContainerSlot() {
-        InventoryContainerSlot slot = super.createContainerSlot();
+        InventoryContainerSlot slot = new CircuitBoardContainerSlot(this, slotX, slotY, getSlotType(), getSlotOverlay(), null, this::setStackUnchecked);
         LOGGER.debug(
             "OverMek created main gui circuit board slot {} for {} at ({}, {})",
             slot == null ? -1 : slot.index,

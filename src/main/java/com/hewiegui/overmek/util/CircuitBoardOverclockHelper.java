@@ -1,16 +1,24 @@
 package com.hewiegui.overmek.util;
 
 import com.hewiegui.overmek.capability.CircuitBoardHolder;
+import com.hewiegui.overmek.config.OverMekConfig;
+import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.base.TileEntityMekanism;
+import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 public final class CircuitBoardOverclockHelper {
-
-    private static final int MAX_OVERCLOCK_BONUS = 10;
 
     private CircuitBoardOverclockHelper() {
     }
 
     public static int getOverclockBonus(TileEntityMekanism tile) {
+        if (!OverMekConfig.isOverclockEnabled()) {
+            return 0;
+        }
+        if (tile instanceof TileEntityFactory<?> && !OverMekConfig.isFactoryOverclockEnabled()) {
+            return 0;
+        }
+
         var holder = tile.getCapability(CircuitBoardHolder.CIRCUIT_BOARD_CAPABILITY).resolve().orElse(null);
         if (holder == null || !holder.hasCircuitBoard()) {
             return 0;
@@ -21,16 +29,9 @@ public final class CircuitBoardOverclockHelper {
             return 0;
         }
 
-        float tierMultiplier = switch (holder.getTier()) {
-            case 0 -> 1.0F;
-            case 1 -> 1.5F;
-            case 2 -> 2.0F;
-            case 3 -> 3.0F;
-            default -> 1.0F;
-        };
-
-        int bonus = (int) (overclockCount * tierMultiplier);
-        return Math.min(bonus, MAX_OVERCLOCK_BONUS);
+        double tierMultiplier = OverMekConfig.getTierMultiplier(holder.getTier());
+        int bonus = (int) Math.floor(overclockCount * tierMultiplier);
+        return Math.min(bonus, OverMekConfig.getMaxOverclockBonus());
     }
 
     public static int getAdjustedTicksRequired(TileEntityMekanism tile, int baseTicksRequired) {
@@ -39,5 +40,19 @@ public final class CircuitBoardOverclockHelper {
             return baseTicksRequired;
         }
         return Math.max(1, (int) Math.ceil(baseTicksRequired / (double) (bonus + 1)));
+    }
+
+    public static double getEffectiveSpeedMultiplier(TileEntityMekanism tile) {
+        return getOverclockBonus(tile) + 1.0D;
+    }
+
+    public static int getCurrentTicksRequired(TileEntityMekanism tile) {
+        if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
+            return progressMachine.getTicksRequired();
+        }
+        if (tile instanceof TileEntityFactory<?> factory) {
+            return factory.getTicksRequired();
+        }
+        return -1;
     }
 }
