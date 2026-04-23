@@ -244,16 +244,6 @@ public final class CircuitBoardOverclockHelper {
         if (fullSpeed <= 1.0D) {
             return getActualSpeedMultiplier(tile);
         }
-        double liveWarmupRatio = getLiveWarmupRatio(tile, stack);
-        if (liveWarmupRatio >= 0.0D) {
-            if (liveWarmupRatio <= 0.0D) {
-                return 1.0D;
-            }
-            if (liveWarmupRatio >= 1.0D) {
-                return fullSpeed;
-            }
-            return 1.0D + (fullSpeed - 1.0D) * liveWarmupRatio;
-        }
         int fullWarmupTicksRequired = getFullWarmupTicksRequired(tile, stack);
         int currentTicks = getCurrentTicksRequired(tile);
         if (fullWarmupTicksRequired > 0 && currentTicks > 0 && currentTicks <= fullWarmupTicksRequired) {
@@ -280,10 +270,6 @@ public final class CircuitBoardOverclockHelper {
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {
             return 1.0D;
-        }
-        double liveWarmupRatio = getLiveWarmupRatio(tile, stack);
-        if (liveWarmupRatio >= 0.0D) {
-            return liveWarmupRatio;
         }
         int fullWarmupTicksRequired = getFullWarmupTicksRequired(tile, stack);
         int currentTicks = getCurrentTicksRequired(tile);
@@ -371,18 +357,6 @@ public final class CircuitBoardOverclockHelper {
         int tier = holder.getTier();
         int warmupTicks = OverMekConfig.getTierWarmupTicks(tier);
         return holder.getWarmupRatio(warmupTicks);
-    }
-
-    private static double getLiveWarmupRatio(TileEntityMekanism tile, ItemStack stack) {
-        ICircuitBoardHolder holder = getHolder(tile);
-        if (holder == null || !holder.hasCircuitBoard()) {
-            return -1.0D;
-        }
-        ItemStack holderStack = holder.getCircuitBoard();
-        if (holderStack.isEmpty() || !ItemStack.isSameItemSameTags(holderStack, stack)) {
-            return -1.0D;
-        }
-        return getWarmupRatio(holder);
     }
 
     @Nullable
