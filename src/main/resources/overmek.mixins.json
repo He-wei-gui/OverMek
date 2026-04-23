@@ -6,8 +6,9 @@
   "mixins": [
     "MixinMachineEnergyContainer",
     "MixinMekanismTileContainer",
+    "MixinTileEntityAdvancedElectricMachine",
+    "MixinTileEntityElectricMachine",
     "MixinTileEntityFactory",
-    "MixinTileEntityMekanism",
     "MixinTileEntityProgressMachine"
   ],
   "client": [
