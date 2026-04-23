@@ -6,8 +6,8 @@ import com.hewiegui.overmek.config.OverMekConfig;
 import java.util.List;
 import java.util.regex.Pattern;
 import mekanism.api.math.FloatingLong;
-import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.base.TileEntityMekanism;
+import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +39,14 @@ public final class CircuitBoardOverclockHelper {
         return canApplyCircuitBoardEffects(blockEntity) || holder != null && holder.hasCircuitBoard();
     }
 
+    public static int getInstalledTier(TileEntityMekanism tile) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder == null || !holder.hasCircuitBoard()) {
+            return -1;
+        }
+        return holder.getTier();
+    }
+
     public static int getOverclockBonus(TileEntityMekanism tile) {
         return (int) Math.floor(Math.max(0.0D, getDisplayedOverclockBonus(tile)));
     }
@@ -62,17 +70,7 @@ public final class CircuitBoardOverclockHelper {
         if (holder == null || !holder.hasCircuitBoard()) {
             return 1.0D;
         }
-
-        double baseBonus = holder.getOverclockCount() * OverMekConfig.getTierSpeedMultiplier(holder.getTier());
-        if (baseBonus <= 0.0D) {
-            return 1.0D;
-        }
-
-        if (tile instanceof TileEntityFactory<?>) {
-            baseBonus *= OverMekConfig.getTierFactorySpeedFactor(holder.getTier());
-        }
-        double cappedBonus = Math.min(baseBonus, OverMekConfig.getMaxOverclockBonus());
-        return cappedBonus + 1.0D;
+        return getBoardSpeedMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>);
     }
 
     public static double getEnergyUsageMultiplier(TileEntityMekanism tile) {
@@ -80,7 +78,21 @@ public final class CircuitBoardOverclockHelper {
         if (holder == null || !holder.hasCircuitBoard()) {
             return 1.0D;
         }
-        return getEffectiveSpeedMultiplier(tile) * OverMekConfig.getTierEnergyUsageFactor(holder.getTier());
+        return getBoardEnergyUsageMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>);
+    }
+
+    public static double getBoardSpeedMultiplier(int tier, int overclockCount, boolean factory) {
+        double speedBonus = getBoardSpeedBonus(tier, overclockCount, factory);
+        return speedBonus <= 0.0D ? 1.0D : speedBonus + 1.0D;
+    }
+
+    public static double getBoardEnergyUsageMultiplier(int tier, int overclockCount, boolean factory) {
+        return getBoardSpeedMultiplier(tier, overclockCount, factory) * OverMekConfig.getTierEnergyUsageFactor(tier);
+    }
+
+    public static boolean hasFactorySpecialization(int tier) {
+        return OverMekConfig.getTierFactorySpeedFactor(tier) > 1.0D
+            || OverMekConfig.getTierMaxBonus(tier, true) > OverMekConfig.getTierMaxBonus(tier, false);
     }
 
     public static int getAdjustedTicksRequired(TileEntityMekanism tile, int baseTicksRequired) {
@@ -107,6 +119,22 @@ public final class CircuitBoardOverclockHelper {
             return factory.getTicksRequired();
         }
         return -1;
+    }
+
+    private static double getBoardSpeedBonus(int tier, int overclockCount, boolean factory) {
+        if (tier < 0 || overclockCount <= 0) {
+            return 0.0D;
+        }
+        double rawBonus = overclockCount * OverMekConfig.getTierSpeedMultiplier(tier);
+        if (rawBonus <= 0.0D) {
+            return 0.0D;
+        }
+        if (factory) {
+            rawBonus *= OverMekConfig.getTierFactorySpeedFactor(tier);
+        }
+        double tierCap = OverMekConfig.getTierMaxBonus(tier, factory);
+        double cappedBonus = Math.min(rawBonus, tierCap);
+        return Math.min(cappedBonus, OverMekConfig.getMaxOverclockBonus());
     }
 
     @Nullable

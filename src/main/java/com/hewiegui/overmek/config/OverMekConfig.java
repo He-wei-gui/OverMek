@@ -59,6 +59,16 @@ public final class OverMekConfig {
         };
     }
 
+    public static double getTierMaxBonus(int tier, boolean factory) {
+        return switch (tier) {
+            case 0 -> factory ? COMMON.basicTierFactoryMaxBonus.get() : COMMON.basicTierMaxBonus.get();
+            case 1 -> factory ? COMMON.advancedTierFactoryMaxBonus.get() : COMMON.advancedTierMaxBonus.get();
+            case 2 -> factory ? COMMON.eliteTierFactoryMaxBonus.get() : COMMON.eliteTierMaxBonus.get();
+            case 3 -> factory ? COMMON.ultimateTierFactoryMaxBonus.get() : COMMON.ultimateTierMaxBonus.get();
+            default -> 0.0D;
+        };
+    }
+
     public static List<? extends String> getAllowedMachineClasses() {
         return COMMON.allowedMachineClasses.get();
     }
@@ -86,6 +96,14 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue advancedTierFactorySpeedFactor;
         final ForgeConfigSpec.DoubleValue eliteTierFactorySpeedFactor;
         final ForgeConfigSpec.DoubleValue ultimateTierFactorySpeedFactor;
+        final ForgeConfigSpec.DoubleValue basicTierMaxBonus;
+        final ForgeConfigSpec.DoubleValue advancedTierMaxBonus;
+        final ForgeConfigSpec.DoubleValue eliteTierMaxBonus;
+        final ForgeConfigSpec.DoubleValue ultimateTierMaxBonus;
+        final ForgeConfigSpec.DoubleValue basicTierFactoryMaxBonus;
+        final ForgeConfigSpec.DoubleValue advancedTierFactoryMaxBonus;
+        final ForgeConfigSpec.DoubleValue eliteTierFactoryMaxBonus;
+        final ForgeConfigSpec.DoubleValue ultimateTierFactoryMaxBonus;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("overclock");
@@ -137,6 +155,14 @@ public final class OverMekConfig {
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
                 .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
 
+            basicTierMaxBonus = builder
+                .comment("Hard cap for the basic board's speed bonus before the global cap applies.")
+                .defineInRange("maxBonus", 0.75D, 0.0D, 64.0D);
+
+            basicTierFactoryMaxBonus = builder
+                .comment("Factory-only cap for the basic board. Keep it close to maxBonus to preserve its gentle role.")
+                .defineInRange("factoryMaxBonus", 0.75D, 0.0D, 64.0D);
+
             builder.pop();
             builder.push("advanced");
 
@@ -152,6 +178,14 @@ public final class OverMekConfig {
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
                 .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
 
+            advancedTierMaxBonus = builder
+                .comment("Hard cap for the advanced board's speed bonus.")
+                .defineInRange("maxBonus", 2.5D, 0.0D, 64.0D);
+
+            advancedTierFactoryMaxBonus = builder
+                .comment("Factory-only cap for the advanced board.")
+                .defineInRange("factoryMaxBonus", 2.5D, 0.0D, 64.0D);
+
             builder.pop();
             builder.push("elite");
 
@@ -165,7 +199,15 @@ public final class OverMekConfig {
 
             eliteTierFactorySpeedFactor = builder
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
-                .defineInRange("factorySpeedFactor", 1.05D, 0.0D, 16.0D);
+                .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
+
+            eliteTierMaxBonus = builder
+                .comment("Hard cap for the elite board's speed bonus.")
+                .defineInRange("maxBonus", 3.5D, 0.0D, 64.0D);
+
+            eliteTierFactoryMaxBonus = builder
+                .comment("Factory-only cap for the elite board.")
+                .defineInRange("factoryMaxBonus", 3.5D, 0.0D, 64.0D);
 
             builder.pop();
             builder.push("ultimate");
@@ -181,6 +223,14 @@ public final class OverMekConfig {
             ultimateTierFactorySpeedFactor = builder
                 .comment("Extra speed factor that only applies when the board is installed in a factory, giving the ultimate board a factory-focused niche.")
                 .defineInRange("factorySpeedFactor", 1.35D, 0.0D, 16.0D);
+
+            ultimateTierMaxBonus = builder
+                .comment("Hard cap for the ultimate board's base speed bonus.")
+                .defineInRange("maxBonus", 4.5D, 0.0D, 64.0D);
+
+            ultimateTierFactoryMaxBonus = builder
+                .comment("Factory-only cap for the ultimate board, enabling its extra throughput specialization.")
+                .defineInRange("factoryMaxBonus", 6.5D, 0.0D, 64.0D);
 
             builder.pop();
             builder.pop();
