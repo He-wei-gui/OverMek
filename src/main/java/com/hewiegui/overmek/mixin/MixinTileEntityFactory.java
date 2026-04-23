@@ -11,6 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = TileEntityFactory.class, remap = false)
 public abstract class MixinTileEntityFactory {
 
+    @Inject(method = "onUpdateServer", at = @At("HEAD"))
+    private void overmek$syncEnergyCapacity(CallbackInfo ci) {
+        TileEntityFactory<?> self = (TileEntityFactory<?>) (Object) this;
+        CircuitBoardOverclockHelper.syncAdjustedMaxEnergy(self, self.getEnergyContainer());
+    }
+
     @Inject(method = "getTicksRequired", at = @At("RETURN"), cancellable = true)
     private void overmek$adjustTicksRequired(CallbackInfoReturnable<Integer> cir) {
         TileEntityFactory<?> self = (TileEntityFactory<?>) (Object) this;

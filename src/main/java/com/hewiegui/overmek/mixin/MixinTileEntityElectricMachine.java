@@ -10,6 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = TileEntityElectricMachine.class, remap = false)
 public abstract class MixinTileEntityElectricMachine {
 
+    @Inject(method = "onUpdateServer", at = @At("HEAD"))
+    private void overmek$syncEnergyCapacity(CallbackInfo ci) {
+        TileEntityElectricMachine self = (TileEntityElectricMachine) (Object) this;
+        CircuitBoardOverclockHelper.syncAdjustedMaxEnergy(self, self.getEnergyContainer());
+    }
+
     @Inject(method = "onUpdateServer", at = @At("TAIL"))
     private void overmek$tickWarmup(CallbackInfo ci) {
         TileEntityElectricMachine self = (TileEntityElectricMachine) (Object) this;

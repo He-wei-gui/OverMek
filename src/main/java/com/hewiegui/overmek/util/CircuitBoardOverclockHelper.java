@@ -8,6 +8,7 @@ import com.hewiegui.overmek.mixin.AccessorTileEntityProgressMachine;
 import java.util.List;
 import java.util.regex.Pattern;
 import mekanism.api.math.FloatingLong;
+import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
@@ -200,6 +201,11 @@ public final class CircuitBoardOverclockHelper {
             return baseMaxEnergy;
         }
         return baseMaxEnergy.multiply(capacityMultiplier);
+    }
+
+    public static void syncAdjustedMaxEnergy(TileEntityMekanism tile, MachineEnergyContainer<?> energyContainer) {
+        FloatingLong upgradedBaseMaxEnergy = MekanismUtils.getMaxEnergy(tile, energyContainer.getBaseMaxEnergy());
+        energyContainer.setMaxEnergy(getAdjustedMaxEnergy(tile, upgradedBaseMaxEnergy));
     }
 
     public static int getCurrentTicksRequired(TileEntityMekanism tile) {

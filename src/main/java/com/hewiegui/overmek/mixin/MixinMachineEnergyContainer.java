@@ -23,8 +23,4 @@ public abstract class MixinMachineEnergyContainer {
         cir.setReturnValue(CircuitBoardOverclockHelper.getAdjustedEnergyPerTick(tile, cir.getReturnValue()));
     }
 
-    @Inject(method = "getMaxEnergy", at = @At("RETURN"), cancellable = true)
-    private void overmek$adjustMaxEnergy(CallbackInfoReturnable<FloatingLong> cir) {
-        cir.setReturnValue(CircuitBoardOverclockHelper.getAdjustedMaxEnergy(tile, cir.getReturnValue()));
-    }
 }
