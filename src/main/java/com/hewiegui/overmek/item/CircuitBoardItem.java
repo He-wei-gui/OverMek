@@ -42,6 +42,7 @@ public class CircuitBoardItem extends Item {
         tooltips.add(Component.translatable("tooltip.overmek.overclock_count", overclockCount));
         tooltips.add(Component.translatable("tooltip.overmek.base_speed_multiplier", OVERMEK_DECIMAL.format(baseSpeedMultiplier)));
         tooltips.add(Component.translatable("tooltip.overmek.energy_usage_profile", OVERMEK_DECIMAL.format(energyProfile)));
+        tooltips.add(Component.translatable("tooltip.overmek.warmup_profile", CircuitBoardOverclockHelper.getWarmupTicksForTier(tier)));
         if (CircuitBoardOverclockHelper.hasFactorySpecialization(tier) && factoryProfile > baseSpeedMultiplier) {
             tooltips.add(Component.translatable("tooltip.overmek.factory_speed_profile", OVERMEK_DECIMAL.format(factoryProfile)));
         }

@@ -71,11 +71,13 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
         double bonus = CircuitBoardOverclockHelper.getDisplayedOverclockBonus(tile);
         double speedMultiplier = CircuitBoardOverclockHelper.getEffectiveSpeedMultiplier(tile);
         double energyMultiplier = CircuitBoardOverclockHelper.getEnergyUsageMultiplier(tile);
+        double warmupRatio = CircuitBoardOverclockHelper.getWarmupRatio(tile);
         int ticksRequired = CircuitBoardOverclockHelper.getCurrentTicksRequired(tile);
 
         lines.add(Component.translatable("tooltip.overmek.current_speed_multiplier", OVERMEK_DECIMAL.format(speedMultiplier)));
         lines.add(Component.translatable("tooltip.overmek.current_overclock_bonus", OVERMEK_DECIMAL.format(bonus)));
         lines.add(Component.translatable("tooltip.overmek.current_energy_multiplier", OVERMEK_DECIMAL.format(energyMultiplier)));
+        lines.add(Component.translatable("tooltip.overmek.current_warmup", OVERMEK_DECIMAL.format(warmupRatio * 100.0D)));
         if (ticksRequired > 0) {
             lines.add(Component.translatable("tooltip.overmek.current_ticks_required", ticksRequired));
         }

@@ -29,6 +29,14 @@ public final class OverMekConfig {
         return COMMON.maxOverclockBonus.get();
     }
 
+    public static boolean isWarmupEnabled() {
+        return COMMON.warmupEnabled.get();
+    }
+
+    public static double getOverclockEnergyMultiplier() {
+        return COMMON.overclockEnergyMultiplier.get();
+    }
+
     public static double getTierSpeedMultiplier(int tier) {
         return switch (tier) {
             case 0 -> COMMON.basicTierSpeedMultiplier.get();
@@ -69,6 +77,26 @@ public final class OverMekConfig {
         };
     }
 
+    public static int getTierWarmupTicks(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicTierWarmupTicks.get();
+            case 1 -> COMMON.advancedTierWarmupTicks.get();
+            case 2 -> COMMON.eliteTierWarmupTicks.get();
+            case 3 -> COMMON.ultimateTierWarmupTicks.get();
+            default -> 0;
+        };
+    }
+
+    public static int getTierWarmupCooldown(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicTierWarmupCooldown.get();
+            case 1 -> COMMON.advancedTierWarmupCooldown.get();
+            case 2 -> COMMON.eliteTierWarmupCooldown.get();
+            case 3 -> COMMON.ultimateTierWarmupCooldown.get();
+            default -> 1;
+        };
+    }
+
     public static List<? extends String> getAllowedMachineClasses() {
         return COMMON.allowedMachineClasses.get();
     }
@@ -81,7 +109,9 @@ public final class OverMekConfig {
 
         final ForgeConfigSpec.BooleanValue overclockEnabled;
         final ForgeConfigSpec.BooleanValue factoryOverclockEnabled;
+        final ForgeConfigSpec.BooleanValue warmupEnabled;
         final ForgeConfigSpec.IntValue maxOverclockBonus;
+        final ForgeConfigSpec.DoubleValue overclockEnergyMultiplier;
         final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedMachineClasses;
         final ForgeConfigSpec.ConfigValue<List<? extends String>> blockedMachineClasses;
         final ForgeConfigSpec.DoubleValue basicTierSpeedMultiplier;
@@ -104,6 +134,14 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue advancedTierFactoryMaxBonus;
         final ForgeConfigSpec.DoubleValue eliteTierFactoryMaxBonus;
         final ForgeConfigSpec.DoubleValue ultimateTierFactoryMaxBonus;
+        final ForgeConfigSpec.IntValue basicTierWarmupTicks;
+        final ForgeConfigSpec.IntValue advancedTierWarmupTicks;
+        final ForgeConfigSpec.IntValue eliteTierWarmupTicks;
+        final ForgeConfigSpec.IntValue ultimateTierWarmupTicks;
+        final ForgeConfigSpec.IntValue basicTierWarmupCooldown;
+        final ForgeConfigSpec.IntValue advancedTierWarmupCooldown;
+        final ForgeConfigSpec.IntValue eliteTierWarmupCooldown;
+        final ForgeConfigSpec.IntValue ultimateTierWarmupCooldown;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("overclock");
@@ -116,9 +154,17 @@ public final class OverMekConfig {
                 .comment("Whether Mekanism factories can benefit from circuit board overclocking.")
                 .define("factoryEnabled", true);
 
+            warmupEnabled = builder
+                .comment("Whether circuit boards need to warm up under sustained operation before reaching full speed.")
+                .define("warmupEnabled", true);
+
             maxOverclockBonus = builder
                 .comment("Caps the effective overclock bonus before it is converted into faster processing.")
                 .defineInRange("maxBonus", 10, 0, 64);
+
+            overclockEnergyMultiplier = builder
+                .comment("Global multiplier applied to circuit board energy draw after all tier adjustments.")
+                .defineInRange("energyMultiplier", 1.5D, 0.0D, 64.0D);
 
             builder.push("machineFilters");
 
@@ -163,6 +209,14 @@ public final class OverMekConfig {
                 .comment("Factory-only cap for the basic board. Keep it close to maxBonus to preserve its gentle role.")
                 .defineInRange("factoryMaxBonus", 0.75D, 0.0D, 64.0D);
 
+            basicTierWarmupTicks = builder
+                .comment("Ticks of sustained activity the basic board needs to reach full performance.")
+                .defineInRange("warmupTicks", 120, 0, 24_000);
+
+            basicTierWarmupCooldown = builder
+                .comment("How many warmup ticks the basic board loses per idle tick.")
+                .defineInRange("warmupCooldown", 4, 1, 1_000);
+
             builder.pop();
             builder.push("advanced");
 
@@ -185,6 +239,14 @@ public final class OverMekConfig {
             advancedTierFactoryMaxBonus = builder
                 .comment("Factory-only cap for the advanced board.")
                 .defineInRange("factoryMaxBonus", 2.5D, 0.0D, 64.0D);
+
+            advancedTierWarmupTicks = builder
+                .comment("Ticks of sustained activity the advanced board needs to reach full performance.")
+                .defineInRange("warmupTicks", 160, 0, 24_000);
+
+            advancedTierWarmupCooldown = builder
+                .comment("How many warmup ticks the advanced board loses per idle tick.")
+                .defineInRange("warmupCooldown", 3, 1, 1_000);
 
             builder.pop();
             builder.push("elite");
@@ -209,6 +271,14 @@ public final class OverMekConfig {
                 .comment("Factory-only cap for the elite board.")
                 .defineInRange("factoryMaxBonus", 3.5D, 0.0D, 64.0D);
 
+            eliteTierWarmupTicks = builder
+                .comment("Ticks of sustained activity the elite board needs to reach full performance.")
+                .defineInRange("warmupTicks", 180, 0, 24_000);
+
+            eliteTierWarmupCooldown = builder
+                .comment("How many warmup ticks the elite board loses per idle tick.")
+                .defineInRange("warmupCooldown", 2, 1, 1_000);
+
             builder.pop();
             builder.push("ultimate");
 
@@ -231,6 +301,14 @@ public final class OverMekConfig {
             ultimateTierFactoryMaxBonus = builder
                 .comment("Factory-only cap for the ultimate board, enabling its extra throughput specialization.")
                 .defineInRange("factoryMaxBonus", 6.5D, 0.0D, 64.0D);
+
+            ultimateTierWarmupTicks = builder
+                .comment("Ticks of sustained activity the ultimate board needs to reach full performance.")
+                .defineInRange("warmupTicks", 240, 0, 24_000);
+
+            ultimateTierWarmupCooldown = builder
+                .comment("How many warmup ticks the ultimate board loses per idle tick.")
+                .defineInRange("warmupCooldown", 1, 1, 1_000);
 
             builder.pop();
             builder.pop();

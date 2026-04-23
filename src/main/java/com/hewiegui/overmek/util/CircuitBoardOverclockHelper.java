@@ -70,7 +70,7 @@ public final class CircuitBoardOverclockHelper {
         if (holder == null || !holder.hasCircuitBoard()) {
             return 1.0D;
         }
-        return getBoardSpeedMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>);
+        return getBoardSpeedMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>, getWarmupRatio(holder));
     }
 
     public static double getEnergyUsageMultiplier(TileEntityMekanism tile) {
@@ -78,21 +78,78 @@ public final class CircuitBoardOverclockHelper {
         if (holder == null || !holder.hasCircuitBoard()) {
             return 1.0D;
         }
-        return getBoardEnergyUsageMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>);
+        return getBoardEnergyUsageMultiplier(holder.getTier(), holder.getOverclockCount(), tile instanceof TileEntityFactory<?>, getWarmupRatio(holder));
+    }
+
+    public static double getWarmupRatio(TileEntityMekanism tile) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder == null || !holder.hasCircuitBoard()) {
+            return 1.0D;
+        }
+        return getWarmupRatio(holder);
+    }
+
+    public static int getWarmupProgress(TileEntityMekanism tile) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        return holder == null ? 0 : holder.getWarmupProgress();
+    }
+
+    public static int getWarmupTicks(TileEntityMekanism tile) {
+        int tier = getInstalledTier(tile);
+        return tier < 0 ? 0 : OverMekConfig.getTierWarmupTicks(tier);
+    }
+
+    public static int getWarmupTicksForTier(int tier) {
+        return tier < 0 ? 0 : OverMekConfig.getTierWarmupTicks(tier);
     }
 
     public static double getBoardSpeedMultiplier(int tier, int overclockCount, boolean factory) {
-        double speedBonus = getBoardSpeedBonus(tier, overclockCount, factory);
-        return speedBonus <= 0.0D ? 1.0D : speedBonus + 1.0D;
+        return getBoardSpeedMultiplier(tier, overclockCount, factory, 1.0D);
+    }
+
+    public static double getBoardSpeedMultiplier(int tier, int overclockCount, boolean factory, double warmupRatio) {
+        double fullSpeedBonus = getBoardSpeedBonus(tier, overclockCount, factory);
+        if (fullSpeedBonus <= 0.0D) {
+            return 1.0D;
+        }
+        double clampedWarmup = Math.min(1.0D, Math.max(0.0D, warmupRatio));
+        return 1.0D + fullSpeedBonus * clampedWarmup;
     }
 
     public static double getBoardEnergyUsageMultiplier(int tier, int overclockCount, boolean factory) {
-        return getBoardSpeedMultiplier(tier, overclockCount, factory) * OverMekConfig.getTierEnergyUsageFactor(tier);
+        return getBoardEnergyUsageMultiplier(tier, overclockCount, factory, 1.0D);
+    }
+
+    public static double getBoardEnergyUsageMultiplier(int tier, int overclockCount, boolean factory, double warmupRatio) {
+        double speedMultiplier = getBoardSpeedMultiplier(tier, overclockCount, factory, warmupRatio);
+        return speedMultiplier * OverMekConfig.getTierEnergyUsageFactor(tier) * OverMekConfig.getOverclockEnergyMultiplier();
     }
 
     public static boolean hasFactorySpecialization(int tier) {
         return OverMekConfig.getTierFactorySpeedFactor(tier) > 1.0D
             || OverMekConfig.getTierMaxBonus(tier, true) > OverMekConfig.getTierMaxBonus(tier, false);
+    }
+
+    public static void tickWarmup(TileEntityMekanism tile, boolean active) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder == null) {
+            return;
+        }
+        if (!holder.hasCircuitBoard() || !OverMekConfig.isWarmupEnabled()) {
+            holder.setWarmupProgress(0);
+            return;
+        }
+        int tier = holder.getTier();
+        int warmupTicks = OverMekConfig.getTierWarmupTicks(tier);
+        if (warmupTicks <= 0) {
+            holder.setWarmupProgress(0);
+            return;
+        }
+        int currentWarmup = holder.getWarmupProgress();
+        int updatedWarmup = active
+            ? Math.min(warmupTicks, currentWarmup + 1)
+            : Math.max(0, currentWarmup - OverMekConfig.getTierWarmupCooldown(tier));
+        holder.setWarmupProgress(updatedWarmup);
     }
 
     public static int getAdjustedTicksRequired(TileEntityMekanism tile, int baseTicksRequired) {
@@ -135,6 +192,15 @@ public final class CircuitBoardOverclockHelper {
         double tierCap = OverMekConfig.getTierMaxBonus(tier, factory);
         double cappedBonus = Math.min(rawBonus, tierCap);
         return Math.min(cappedBonus, OverMekConfig.getMaxOverclockBonus());
+    }
+
+    private static double getWarmupRatio(ICircuitBoardHolder holder) {
+        if (!OverMekConfig.isWarmupEnabled()) {
+            return 1.0D;
+        }
+        int tier = holder.getTier();
+        int warmupTicks = OverMekConfig.getTierWarmupTicks(tier);
+        return holder.getWarmupRatio(warmupTicks);
     }
 
     @Nullable

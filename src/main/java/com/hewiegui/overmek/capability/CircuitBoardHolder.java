@@ -18,6 +18,7 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         CapabilityManager.get(new CapabilityToken<>() {});
 
     private ItemStack circuitBoard = ItemStack.EMPTY;
+    private int warmupProgress;
     private final LazyOptional<ICircuitBoardHolder> optional = LazyOptional.of(() -> this);
     private final BlockEntity blockEntity;
 
@@ -32,9 +33,29 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
 
     @Override
     public void setCircuitBoard(ItemStack stack) {
+        boolean changedBoard = !ItemStack.isSameItemSameTags(circuitBoard, stack);
         circuitBoard = stack.copy();
+        if (changedBoard) {
+            warmupProgress = 0;
+        }
         if (blockEntity != null) {
             blockEntity.setChanged();
+        }
+    }
+
+    @Override
+    public int getWarmupProgress() {
+        return warmupProgress;
+    }
+
+    @Override
+    public void setWarmupProgress(int progress) {
+        int clamped = Math.max(0, progress);
+        if (warmupProgress != clamped) {
+            warmupProgress = clamped;
+            if (blockEntity != null) {
+                blockEntity.setChanged();
+            }
         }
     }
 
@@ -49,6 +70,9 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         if (!circuitBoard.isEmpty()) {
             tag.put("CircuitBoard", circuitBoard.serializeNBT());
         }
+        if (warmupProgress > 0) {
+            tag.putInt("WarmupProgress", warmupProgress);
+        }
         return tag;
     }
 
@@ -59,5 +83,6 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         } else {
             circuitBoard = ItemStack.EMPTY;
         }
+        warmupProgress = tag.getInt("WarmupProgress");
     }
 }
