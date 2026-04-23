@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +53,32 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
             guiGraphics.renderTooltip(font, tooltip, stack.getTooltipImage(), stack, mouseX, mouseY);
         }
         ci.cancel();
+    }
+
+    @Inject(method = "renderBg", at = @At("TAIL"))
+    private void overmek$renderCircuitBoardWarmupBar(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci) {
+        for (Slot slot : menu.slots) {
+            if (!(slot instanceof CircuitBoardContainerSlot)) {
+                continue;
+            }
+            ItemStack stack = slot.getItem();
+            if (stack.isEmpty() || !CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(tile)) {
+                continue;
+            }
+
+            double warmupRatio = CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
+            int barX = leftPos + slot.x + 21;
+            int barY = topPos + slot.y + 1;
+            int barHeight = 16;
+            int filledHeight = Mth.clamp((int) Math.round(warmupRatio * barHeight), 0, barHeight);
+
+            guiGraphics.fill(barX, barY, barX + 3, barY + barHeight, 0xAA202020);
+            guiGraphics.fill(barX + 1, barY + 1, barX + 2, barY + barHeight - 1, 0xAA4A4A4A);
+            if (filledHeight > 0) {
+                int color = warmupRatio >= 1.0D ? 0xFF4DFFD2 : 0xFFFFB347;
+                guiGraphics.fill(barX, barY + barHeight - filledHeight, barX + 3, barY + barHeight, color);
+            }
+        }
     }
 
     private List<Component> overmek$getEmptyTooltip() {
