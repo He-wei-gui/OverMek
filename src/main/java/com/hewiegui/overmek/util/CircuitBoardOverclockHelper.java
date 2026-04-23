@@ -11,6 +11,7 @@ import mekanism.api.math.FloatingLong;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
+import mekanism.common.util.MekanismUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -190,13 +191,15 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static int getBaseTicksRequired(TileEntityMekanism tile) {
+        int baseTicksRequired;
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
-            return ((AccessorTileEntityProgressMachine) progressMachine).overmek$getBaseTicksRequired();
+            baseTicksRequired = ((AccessorTileEntityProgressMachine) progressMachine).overmek$getBaseTicksRequired();
+        } else if (tile instanceof TileEntityFactory<?>) {
+            baseTicksRequired = 200;
+        } else {
+            return -1;
         }
-        if (tile instanceof TileEntityFactory<?>) {
-            return 200;
-        }
-        return -1;
+        return MekanismUtils.getTicks(tile, baseTicksRequired);
     }
 
     public static double getActualSpeedMultiplier(TileEntityMekanism tile) {
