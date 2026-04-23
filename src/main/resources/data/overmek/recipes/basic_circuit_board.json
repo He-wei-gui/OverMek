@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ARA",
+    "HCH",
+    "ARA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/infused"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "H": {
+      "item": "mekanism:hdpe_sheet"
+    },
+    "C": {
+      "item": "mekanism:basic_control_circuit"
+    }
+  },
+  "result": {
+    "item": "overmek:basic_circuit_board"
+  }
+}

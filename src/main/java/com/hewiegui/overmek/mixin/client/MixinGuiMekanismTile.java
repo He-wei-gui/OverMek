@@ -64,12 +64,18 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
 
     private List<Component> overmek$getStatusLines() {
         List<Component> lines = new ArrayList<>();
-        int bonus = CircuitBoardOverclockHelper.getOverclockBonus(tile);
+        if (!CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(tile)) {
+            lines.add(Component.translatable("tooltip.overmek.machine_disabled"));
+            return lines;
+        }
+        double bonus = CircuitBoardOverclockHelper.getDisplayedOverclockBonus(tile);
         double speedMultiplier = CircuitBoardOverclockHelper.getEffectiveSpeedMultiplier(tile);
+        double energyMultiplier = CircuitBoardOverclockHelper.getEnergyUsageMultiplier(tile);
         int ticksRequired = CircuitBoardOverclockHelper.getCurrentTicksRequired(tile);
 
         lines.add(Component.translatable("tooltip.overmek.current_speed_multiplier", OVERMEK_DECIMAL.format(speedMultiplier)));
-        lines.add(Component.translatable("tooltip.overmek.current_overclock_bonus", bonus));
+        lines.add(Component.translatable("tooltip.overmek.current_overclock_bonus", OVERMEK_DECIMAL.format(bonus)));
+        lines.add(Component.translatable("tooltip.overmek.current_energy_multiplier", OVERMEK_DECIMAL.format(energyMultiplier)));
         if (ticksRequired > 0) {
             lines.add(Component.translatable("tooltip.overmek.current_ticks_required", ticksRequired));
         }

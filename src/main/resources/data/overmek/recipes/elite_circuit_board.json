@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AEA",
+    "BCB",
+    "AEA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/atomic"
+    },
+    "E": {
+      "item": "mekanism:energy_tablet"
+    },
+    "B": {
+      "item": "overmek:advanced_circuit_board"
+    },
+    "C": {
+      "item": "mekanism:elite_control_circuit"
+    }
+  },
+  "result": {
+    "item": "overmek:elite_circuit_board"
+  }
+}

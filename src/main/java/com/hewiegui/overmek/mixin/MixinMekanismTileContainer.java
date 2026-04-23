@@ -2,6 +2,7 @@ package com.hewiegui.overmek.mixin;
 
 import com.hewiegui.overmek.capability.CircuitBoardHolder;
 import com.hewiegui.overmek.inventory.CircuitBoardInventorySlot;
+import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
 import com.mojang.logging.LogUtils;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.tile.factory.TileEntityFactory;
@@ -35,19 +36,17 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
             overmek$logger.debug("OverMek skipped circuit board slot because tile entity is null for container {}", self.getClass().getName());
             return;
         }
-        boolean mekanismTile = be.getClass().getName().startsWith("mekanism.common.tile");
-        boolean supportsUpgrades = self.getTileEntity().supportsUpgrades();
-        if (!mekanismTile || !supportsUpgrades) {
+        var holder = be.getCapability(CircuitBoardHolder.CIRCUIT_BOARD_CAPABILITY).resolve().orElse(null);
+        if (!CircuitBoardOverclockHelper.shouldExposeCircuitBoardSlot(be, holder)) {
             overmek$logger.debug(
-                "OverMek skipped circuit board slot for {}. mekanismTile={}, supportsUpgrades={}",
+                "OverMek skipped circuit board slot for {}. supported={}, hasBoard={}",
                 be.getClass().getName(),
-                mekanismTile,
-                supportsUpgrades
+                CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(be),
+                holder != null && holder.hasCircuitBoard()
             );
             return;
         }
 
-        var holder = be.getCapability(CircuitBoardHolder.CIRCUIT_BOARD_CAPABILITY).resolve().orElse(null);
         if (holder == null) {
             overmek$logger.debug(
                 "OverMek could not resolve circuit board capability for {}. registered={}",

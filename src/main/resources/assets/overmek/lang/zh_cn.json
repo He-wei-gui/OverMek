@@ -1,0 +1,22 @@
+{
+  "item.overmek.basic_circuit_board": "基础电路板",
+  "item.overmek.advanced_circuit_board": "高级电路板",
+  "item.overmek.elite_circuit_board": "精英电路板",
+  "item.overmek.ultimate_circuit_board": "终极电路板",
+  "itemGroup.overmek": "OverMek",
+  "tooltip.overmek.overclock_count": "基础超频层数：%s",
+  "tooltip.overmek.base_speed_multiplier": "基础速度档位：x%s",
+  "tooltip.overmek.energy_usage_profile": "耗能档位：x%s/t",
+  "tooltip.overmek.factory_speed_profile": "工厂专精倍率：x%s",
+  "tooltip.overmek.board_role_basic": "定位：稳定入门加速",
+  "tooltip.overmek.board_role_advanced": "定位：高吞吐单机强化",
+  "tooltip.overmek.board_role_elite": "定位：兼顾速度与效率",
+  "tooltip.overmek.board_role_ultimate": "定位：面向工厂的峰值吞吐",
+  "tooltip.overmek.circuit_board_slot": "在此安装电路板",
+  "tooltip.overmek.no_circuit_board": "当前未安装电路板",
+  "tooltip.overmek.machine_disabled": "该机器已被配置禁用电路板效果",
+  "tooltip.overmek.current_speed_multiplier": "当前速度：x%s",
+  "tooltip.overmek.current_overclock_bonus": "当前超频加成：+%s",
+  "tooltip.overmek.current_energy_multiplier": "当前耗能：x%s/t",
+  "tooltip.overmek.current_ticks_required": "当前加工时间：%s tick"
+}
