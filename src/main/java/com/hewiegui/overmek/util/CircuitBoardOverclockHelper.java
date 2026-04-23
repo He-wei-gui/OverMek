@@ -4,6 +4,7 @@ import com.hewiegui.overmek.capability.CircuitBoardHolder;
 import com.hewiegui.overmek.capability.ICircuitBoardHolder;
 import com.hewiegui.overmek.config.OverMekConfig;
 import com.hewiegui.overmek.item.CircuitBoardItem;
+import com.hewiegui.overmek.mixin.AccessorTileEntityFactory;
 import com.hewiegui.overmek.mixin.AccessorTileEntityProgressMachine;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -210,10 +211,10 @@ public final class CircuitBoardOverclockHelper {
 
     public static int getCurrentTicksRequired(TileEntityMekanism tile) {
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
-            return progressMachine.getTicksRequired();
+            return ((AccessorTileEntityProgressMachine) progressMachine).overmek$getSyncedTicksRequired();
         }
         if (tile instanceof TileEntityFactory<?> factory) {
-            return factory.getTicksRequired();
+            return ((AccessorTileEntityFactory) factory).overmek$getSyncedTicksRequired();
         }
         return -1;
     }

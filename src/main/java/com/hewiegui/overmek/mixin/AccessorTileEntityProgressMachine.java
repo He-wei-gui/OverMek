@@ -9,4 +9,7 @@ public interface AccessorTileEntityProgressMachine {
 
     @Accessor("baseTicksRequired")
     int overmek$getBaseTicksRequired();
+
+    @Accessor("ticksRequired")
+    int overmek$getSyncedTicksRequired();
 }
