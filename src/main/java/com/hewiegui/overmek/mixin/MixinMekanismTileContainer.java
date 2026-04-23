@@ -21,7 +21,7 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
     private static final int OVERMEK_DEFAULT_GUI_WIDTH = 176;
     private static final int OVERMEK_ULTIMATE_FACTORY_GUI_WIDTH = 210;
     private static final int OVERMEK_EXTERNAL_SLOT_X_OFFSET = 1;
-    private static final int OVERMEK_EXTERNAL_SLOT_Y = 34;
+    private static final int OVERMEK_EXTERNAL_SLOT_Y = 52;
     private static final Logger overmek$logger = LogUtils.getLogger();
 
     protected MixinMekanismTileContainer() {
