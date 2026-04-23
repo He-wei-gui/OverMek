@@ -211,7 +211,7 @@ public final class OverMekConfig {
 
             basicTierWarmupTicks = builder
                 .comment("Ticks of sustained activity the basic board needs to reach full performance.")
-                .defineInRange("warmupTicks", 120, 0, 24_000);
+                .defineInRange("warmupTicks", 480, 0, 24_000);
 
             basicTierWarmupCooldown = builder
                 .comment("How many warmup ticks the basic board loses per idle tick.")
@@ -242,7 +242,7 @@ public final class OverMekConfig {
 
             advancedTierWarmupTicks = builder
                 .comment("Ticks of sustained activity the advanced board needs to reach full performance.")
-                .defineInRange("warmupTicks", 160, 0, 24_000);
+                .defineInRange("warmupTicks", 720, 0, 24_000);
 
             advancedTierWarmupCooldown = builder
                 .comment("How many warmup ticks the advanced board loses per idle tick.")
@@ -273,7 +273,7 @@ public final class OverMekConfig {
 
             eliteTierWarmupTicks = builder
                 .comment("Ticks of sustained activity the elite board needs to reach full performance.")
-                .defineInRange("warmupTicks", 180, 0, 24_000);
+                .defineInRange("warmupTicks", 960, 0, 24_000);
 
             eliteTierWarmupCooldown = builder
                 .comment("How many warmup ticks the elite board loses per idle tick.")
@@ -304,7 +304,7 @@ public final class OverMekConfig {
 
             ultimateTierWarmupTicks = builder
                 .comment("Ticks of sustained activity the ultimate board needs to reach full performance.")
-                .defineInRange("warmupTicks", 240, 0, 24_000);
+                .defineInRange("warmupTicks", 1200, 0, 24_000);
 
             ultimateTierWarmupCooldown = builder
                 .comment("How many warmup ticks the ultimate board loses per idle tick.")

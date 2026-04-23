@@ -48,7 +48,7 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
             displayTooltips(guiGraphics, mouseX, mouseY, overmek$getEmptyTooltip());
         } else {
             List<Component> tooltip = new ArrayList<>(Screen.getTooltipFromItem(Minecraft.getInstance(), stack));
-            tooltip.addAll(overmek$getStatusLines());
+            tooltip.addAll(overmek$getStatusLines(stack));
             guiGraphics.renderTooltip(font, tooltip, stack.getTooltipImage(), stack, mouseX, mouseY);
         }
         ci.cancel();
@@ -58,20 +58,19 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(Component.translatable("tooltip.overmek.circuit_board_slot"));
         tooltip.add(Component.translatable("tooltip.overmek.no_circuit_board"));
-        tooltip.addAll(overmek$getStatusLines());
         return tooltip;
     }
 
-    private List<Component> overmek$getStatusLines() {
+    private List<Component> overmek$getStatusLines(ItemStack stack) {
         List<Component> lines = new ArrayList<>();
         if (!CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(tile)) {
             lines.add(Component.translatable("tooltip.overmek.machine_disabled"));
             return lines;
         }
-        double bonus = CircuitBoardOverclockHelper.getDisplayedOverclockBonus(tile);
-        double speedMultiplier = CircuitBoardOverclockHelper.getEffectiveSpeedMultiplier(tile);
-        double energyMultiplier = CircuitBoardOverclockHelper.getEnergyUsageMultiplier(tile);
-        double warmupRatio = CircuitBoardOverclockHelper.getWarmupRatio(tile);
+        double speedMultiplier = CircuitBoardOverclockHelper.getDisplayedSpeedMultiplier(tile, stack);
+        double bonus = Math.max(0.0D, speedMultiplier - 1.0D);
+        double energyMultiplier = CircuitBoardOverclockHelper.getDisplayedEnergyUsageMultiplier(tile, stack);
+        double warmupRatio = CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
         int ticksRequired = CircuitBoardOverclockHelper.getCurrentTicksRequired(tile);
 
         lines.add(Component.translatable("tooltip.overmek.current_speed_multiplier", OVERMEK_DECIMAL.format(speedMultiplier)));
