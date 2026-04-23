@@ -173,6 +173,13 @@ public final class CircuitBoardOverclockHelper {
         holder.setWarmupProgress(updatedWarmup);
     }
 
+    public static void resetWarmup(TileEntityMekanism tile) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder != null) {
+            holder.setWarmupProgress(0);
+        }
+    }
+
     public static int getAdjustedTicksRequired(TileEntityMekanism tile, int baseTicksRequired) {
         double speedMultiplier = getEffectiveSpeedMultiplier(tile);
         if (speedMultiplier <= 1.0D || baseTicksRequired <= 1) {

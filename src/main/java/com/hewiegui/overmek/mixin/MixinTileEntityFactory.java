@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.mixin;
 
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
+import mekanism.api.Upgrade;
 import mekanism.common.tile.factory.TileEntityFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,5 +28,13 @@ public abstract class MixinTileEntityFactory {
     private void overmek$tickWarmup(CallbackInfo ci) {
         TileEntityFactory<?> self = (TileEntityFactory<?>) (Object) this;
         CircuitBoardOverclockHelper.tickWarmup(self, self.getActive());
+    }
+
+    @Inject(method = "recalculateUpgrades", at = @At("TAIL"))
+    private void overmek$resetWarmupOnSpeedUpgrade(Upgrade upgrade, CallbackInfo ci) {
+        if (upgrade == Upgrade.SPEED) {
+            TileEntityFactory<?> self = (TileEntityFactory<?>) (Object) this;
+            CircuitBoardOverclockHelper.resetWarmup(self);
+        }
     }
 }
