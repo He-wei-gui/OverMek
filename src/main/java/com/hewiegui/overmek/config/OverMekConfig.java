@@ -67,6 +67,16 @@ public final class OverMekConfig {
         };
     }
 
+    public static double getTierEnergyCapacityFactor(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicTierEnergyCapacityFactor.get();
+            case 1 -> COMMON.advancedTierEnergyCapacityFactor.get();
+            case 2 -> COMMON.eliteTierEnergyCapacityFactor.get();
+            case 3 -> COMMON.ultimateTierEnergyCapacityFactor.get();
+            default -> 1.0D;
+        };
+    }
+
     public static double getTierMaxBonus(int tier, boolean factory) {
         return switch (tier) {
             case 0 -> factory ? COMMON.basicTierFactoryMaxBonus.get() : COMMON.basicTierMaxBonus.get();
@@ -126,6 +136,10 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue advancedTierFactorySpeedFactor;
         final ForgeConfigSpec.DoubleValue eliteTierFactorySpeedFactor;
         final ForgeConfigSpec.DoubleValue ultimateTierFactorySpeedFactor;
+        final ForgeConfigSpec.DoubleValue basicTierEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue advancedTierEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue eliteTierEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue ultimateTierEnergyCapacityFactor;
         final ForgeConfigSpec.DoubleValue basicTierMaxBonus;
         final ForgeConfigSpec.DoubleValue advancedTierMaxBonus;
         final ForgeConfigSpec.DoubleValue eliteTierMaxBonus;
@@ -201,6 +215,10 @@ public final class OverMekConfig {
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
                 .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
 
+            basicTierEnergyCapacityFactor = builder
+                .comment("Energy storage multiplier applied while the basic board is installed.")
+                .defineInRange("energyCapacityFactor", 1.5D, 1.0D, 64.0D);
+
             basicTierMaxBonus = builder
                 .comment("Hard cap for the basic board's speed bonus before the global cap applies.")
                 .defineInRange("maxBonus", 0.75D, 0.0D, 64.0D);
@@ -231,6 +249,10 @@ public final class OverMekConfig {
             advancedTierFactorySpeedFactor = builder
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
                 .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
+
+            advancedTierEnergyCapacityFactor = builder
+                .comment("Energy storage multiplier applied while the advanced board is installed.")
+                .defineInRange("energyCapacityFactor", 2.25D, 1.0D, 64.0D);
 
             advancedTierMaxBonus = builder
                 .comment("Hard cap for the advanced board's speed bonus.")
@@ -263,6 +285,10 @@ public final class OverMekConfig {
                 .comment("Extra speed factor that only applies when the board is installed in a factory.")
                 .defineInRange("factorySpeedFactor", 1.0D, 0.0D, 16.0D);
 
+            eliteTierEnergyCapacityFactor = builder
+                .comment("Energy storage multiplier applied while the elite board is installed.")
+                .defineInRange("energyCapacityFactor", 3.5D, 1.0D, 64.0D);
+
             eliteTierMaxBonus = builder
                 .comment("Hard cap for the elite board's speed bonus.")
                 .defineInRange("maxBonus", 3.5D, 0.0D, 64.0D);
@@ -293,6 +319,10 @@ public final class OverMekConfig {
             ultimateTierFactorySpeedFactor = builder
                 .comment("Extra speed factor that only applies when the board is installed in a factory, giving the ultimate board a factory-focused niche.")
                 .defineInRange("factorySpeedFactor", 1.35D, 0.0D, 16.0D);
+
+            ultimateTierEnergyCapacityFactor = builder
+                .comment("Energy storage multiplier applied while the ultimate board is installed.")
+                .defineInRange("energyCapacityFactor", 5.0D, 1.0D, 64.0D);
 
             ultimateTierMaxBonus = builder
                 .comment("Hard cap for the ultimate board's base speed bonus.")

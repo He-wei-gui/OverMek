@@ -36,12 +36,14 @@ public class CircuitBoardItem extends Item {
         double baseSpeedMultiplier = CircuitBoardOverclockHelper.getBoardSpeedMultiplier(tier, overclockCount, false);
         double energyProfile = CircuitBoardOverclockHelper.getBoardEnergyUsageMultiplier(tier, overclockCount, false);
         double factoryProfile = CircuitBoardOverclockHelper.getBoardSpeedMultiplier(tier, overclockCount, true);
+        double energyCapacityProfile = CircuitBoardOverclockHelper.getBoardEnergyCapacityMultiplier(tier);
 
         tooltips.add(Component.translatable(getRoleTranslationKey()));
         tooltips.add(Component.translatable(getEffectTranslationKey()));
         tooltips.add(Component.translatable("tooltip.overmek.overclock_count", overclockCount));
         tooltips.add(Component.translatable("tooltip.overmek.base_speed_multiplier", OVERMEK_DECIMAL.format(baseSpeedMultiplier)));
         tooltips.add(Component.translatable("tooltip.overmek.energy_usage_profile", OVERMEK_DECIMAL.format(energyProfile)));
+        tooltips.add(Component.translatable("tooltip.overmek.energy_capacity_profile", OVERMEK_DECIMAL.format(energyCapacityProfile)));
         tooltips.add(Component.translatable("tooltip.overmek.warmup_profile", CircuitBoardOverclockHelper.getWarmupTicksForTier(tier)));
         if (CircuitBoardOverclockHelper.hasFactorySpecialization(tier) && factoryProfile > baseSpeedMultiplier) {
             tooltips.add(Component.translatable("tooltip.overmek.factory_speed_profile", OVERMEK_DECIMAL.format(factoryProfile)));

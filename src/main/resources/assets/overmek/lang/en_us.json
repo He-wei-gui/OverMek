@@ -7,6 +7,7 @@
   "tooltip.overmek.overclock_count": "Base overclock count: %s",
   "tooltip.overmek.base_speed_multiplier": "Single-machine speed profile: x%s",
   "tooltip.overmek.energy_usage_profile": "Single-machine energy draw: x%s/t",
+  "tooltip.overmek.energy_capacity_profile": "Machine energy capacity: x%s",
   "tooltip.overmek.factory_speed_profile": "Factory throughput profile: x%s",
   "tooltip.overmek.warmup_profile": "Warmup profile: %s t to full output",
   "tooltip.overmek.board_role_basic": "Role: Gentle speed-up for early setups",

@@ -137,6 +137,13 @@ public final class CircuitBoardOverclockHelper {
         return speedMultiplier * OverMekConfig.getTierEnergyUsageFactor(tier) * OverMekConfig.getOverclockEnergyMultiplier();
     }
 
+    public static double getBoardEnergyCapacityMultiplier(int tier) {
+        if (tier < 0) {
+            return 1.0D;
+        }
+        return OverMekConfig.getTierEnergyCapacityFactor(tier);
+    }
+
     public static boolean hasFactorySpecialization(int tier) {
         return OverMekConfig.getTierFactorySpeedFactor(tier) > 1.0D
             || OverMekConfig.getTierMaxBonus(tier, true) > OverMekConfig.getTierMaxBonus(tier, false);
@@ -178,6 +185,21 @@ public final class CircuitBoardOverclockHelper {
             return baseEnergyPerTick;
         }
         return baseEnergyPerTick.multiply(energyMultiplier);
+    }
+
+    public static FloatingLong getAdjustedMaxEnergy(TileEntityMekanism tile, FloatingLong baseMaxEnergy) {
+        if (!canApplyCircuitBoardEffects(tile)) {
+            return baseMaxEnergy;
+        }
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder == null || !holder.hasCircuitBoard()) {
+            return baseMaxEnergy;
+        }
+        double capacityMultiplier = getBoardEnergyCapacityMultiplier(holder.getTier());
+        if (capacityMultiplier == 1.0D) {
+            return baseMaxEnergy;
+        }
+        return baseMaxEnergy.multiply(capacityMultiplier);
     }
 
     public static int getCurrentTicksRequired(TileEntityMekanism tile) {
