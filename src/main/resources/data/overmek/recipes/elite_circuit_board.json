@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AEA",
+    "ATA",
     "BCB",
-    "AEA"
+    "ATA"
   ],
   "key": {
     "A": {
       "tag": "mekanism:alloys/atomic"
     },
-    "E": {
-      "item": "mekanism:energy_tablet"
+    "T": {
+      "item": "mekanism:teleportation_core"
     },
     "B": {
       "item": "overmek:advanced_circuit_board"

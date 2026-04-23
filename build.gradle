@@ -54,6 +54,10 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev/"
     }
+    maven {
+        name = "BlameJared Maven"
+        url = "https://maven.blamejared.com/"
+    }
 }
 
 dependencies {
@@ -66,6 +70,11 @@ dependencies {
 
     // Mixin annotation processor
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // JEI for dev runtime and recipe viewing
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 }
 processResources {
     var replaceProperties = [
