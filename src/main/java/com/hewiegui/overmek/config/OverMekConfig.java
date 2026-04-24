@@ -115,6 +115,10 @@ public final class OverMekConfig {
         return COMMON.blockedMachineClasses.get();
     }
 
+    public static boolean isGeneratorBoardConfigEnabled() {
+        return COMMON.generatorBoardProfilesEnabled.get();
+    }
+
     public static final class Common {
 
         final ForgeConfigSpec.BooleanValue overclockEnabled;
@@ -124,6 +128,7 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue overclockEnergyMultiplier;
         final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedMachineClasses;
         final ForgeConfigSpec.ConfigValue<List<? extends String>> blockedMachineClasses;
+        final ForgeConfigSpec.BooleanValue generatorBoardProfilesEnabled;
         final ForgeConfigSpec.DoubleValue basicTierSpeedMultiplier;
         final ForgeConfigSpec.DoubleValue advancedTierSpeedMultiplier;
         final ForgeConfigSpec.DoubleValue eliteTierSpeedMultiplier;
@@ -156,6 +161,22 @@ public final class OverMekConfig {
         final ForgeConfigSpec.IntValue advancedTierWarmupCooldown;
         final ForgeConfigSpec.IntValue eliteTierWarmupCooldown;
         final ForgeConfigSpec.IntValue ultimateTierWarmupCooldown;
+        final ForgeConfigSpec.DoubleValue basicGeneratorGenerationMultiplier;
+        final ForgeConfigSpec.DoubleValue advancedGeneratorGenerationMultiplier;
+        final ForgeConfigSpec.DoubleValue eliteGeneratorGenerationMultiplier;
+        final ForgeConfigSpec.DoubleValue ultimateGeneratorGenerationMultiplier;
+        final ForgeConfigSpec.DoubleValue basicGeneratorFuelConsumptionMultiplier;
+        final ForgeConfigSpec.DoubleValue advancedGeneratorFuelConsumptionMultiplier;
+        final ForgeConfigSpec.DoubleValue eliteGeneratorFuelConsumptionMultiplier;
+        final ForgeConfigSpec.DoubleValue ultimateGeneratorFuelConsumptionMultiplier;
+        final ForgeConfigSpec.IntValue basicGeneratorStartupWarmupTicks;
+        final ForgeConfigSpec.IntValue advancedGeneratorStartupWarmupTicks;
+        final ForgeConfigSpec.IntValue eliteGeneratorStartupWarmupTicks;
+        final ForgeConfigSpec.IntValue ultimateGeneratorStartupWarmupTicks;
+        final ForgeConfigSpec.DoubleValue basicGeneratorEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue advancedGeneratorEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue eliteGeneratorEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue ultimateGeneratorEnergyCapacityFactor;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("overclock");
@@ -341,6 +362,42 @@ public final class OverMekConfig {
                 .defineInRange("warmupCooldown", 1, 1, 1_000);
 
             builder.pop();
+            builder.pop();
+
+            builder.push("generatorBoards");
+
+            generatorBoardProfilesEnabled = builder
+                .comment("Reserved for future Mekanism Generators integration. Kept disabled until generator support is implemented.")
+                .define("enabled", false);
+
+            builder.push("basic");
+            basicGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.15D, 1.0D, 64.0D);
+            basicGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.2D, 1.0D, 64.0D);
+            basicGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 80, 0, 24_000);
+            basicGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 1.25D, 1.0D, 64.0D);
+            builder.pop();
+
+            builder.push("advanced");
+            advancedGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.45D, 1.0D, 64.0D);
+            advancedGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.55D, 1.0D, 64.0D);
+            advancedGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 120, 0, 24_000);
+            advancedGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 1.75D, 1.0D, 64.0D);
+            builder.pop();
+
+            builder.push("elite");
+            eliteGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.8D, 1.0D, 64.0D);
+            eliteGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.85D, 1.0D, 64.0D);
+            eliteGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 160, 0, 24_000);
+            eliteGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 2.4D, 1.0D, 64.0D);
+            builder.pop();
+
+            builder.push("ultimate");
+            ultimateGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 2.25D, 1.0D, 64.0D);
+            ultimateGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 2.5D, 1.0D, 64.0D);
+            ultimateGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 220, 0, 24_000);
+            ultimateGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 3.25D, 1.0D, 64.0D);
+            builder.pop();
+
             builder.pop();
         }
     }

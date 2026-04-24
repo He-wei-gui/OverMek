@@ -8,10 +8,10 @@
     "AccessorTileEntityProgressMachine",
     "MixinMachineEnergyContainer",
     "MixinMekanismTileContainer",
-    "MixinTileEntityMekanism",
-    "MixinTileEntityAdvancedElectricMachine",
-    "MixinTileEntityElectricMachine",
+    "MixinRecipeCacheLookupMonitor",
+    "MixinTileEntityConfigurableMachine",
     "MixinTileEntityFactory",
+    "MixinTileEntityMekanism",
     "MixinTileEntityProgressMachine"
   ],
   "client": [

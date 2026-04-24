@@ -12,7 +12,9 @@ import mekanism.api.math.FloatingLong;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.factory.TileEntityFactory;
+import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,7 +29,7 @@ public final class CircuitBoardOverclockHelper {
         if (!(blockEntity instanceof TileEntityMekanism)) {
             return false;
         }
-        if (!(blockEntity instanceof TileEntityProgressMachine<?> || blockEntity instanceof TileEntityFactory<?>)) {
+        if (!(blockEntity instanceof TileEntityRecipeMachine<?> || blockEntity instanceof TileEntityFactory<?>)) {
             return false;
         }
         String className = blockEntity.getClass().getName();
@@ -216,6 +218,14 @@ public final class CircuitBoardOverclockHelper {
         energyContainer.setMaxEnergy(getAdjustedMaxEnergy(tile, upgradedBaseMaxEnergy));
     }
 
+    public static void syncAdjustedMaxEnergy(TileEntityMekanism tile) {
+        for (IEnergyContainer energyContainer : tile.getEnergyContainers(null)) {
+            if (energyContainer instanceof MachineEnergyContainer<?> machineEnergyContainer) {
+                syncAdjustedMaxEnergy(tile, machineEnergyContainer);
+            }
+        }
+    }
+
     public static int getCurrentTicksRequired(TileEntityMekanism tile) {
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
             return ((AccessorTileEntityProgressMachine) progressMachine).overmek$getSyncedTicksRequired();
@@ -321,6 +331,17 @@ public final class CircuitBoardOverclockHelper {
             return displayData.overmek$getSyncedWarmupProgress();
         }
         return getWarmupProgress(tile);
+    }
+
+    public static boolean usesRecipeMachineExtraPasses(TileEntityMekanism tile) {
+        return tile instanceof TileEntityRecipeMachine<?> && !(tile instanceof TileEntityProgressMachine<?>) && !(tile instanceof TileEntityFactory<?>);
+    }
+
+    public static int getExtraRecipePasses(TileEntityMekanism tile) {
+        if (!usesRecipeMachineExtraPasses(tile)) {
+            return 0;
+        }
+        return Math.max(0, (int) Math.round(getEffectiveSpeedMultiplier(tile) - 1.0D));
     }
 
     public static int getFullWarmupTicksRequired(TileEntityMekanism tile, ItemStack stack) {

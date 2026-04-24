@@ -2,6 +2,7 @@ package com.hewiegui.overmek.mixin;
 
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
 import com.hewiegui.overmek.util.ICircuitBoardDisplayData;
+import mekanism.api.Upgrade;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableInt;
 import mekanism.common.tile.base.TileEntityMekanism;
@@ -34,5 +35,13 @@ public abstract class MixinTileEntityMekanism implements ICircuitBoardDisplayDat
     @Override
     public void overmek$setSyncedWarmupProgress(int progress) {
         overmek$syncedWarmupProgress = Math.max(0, progress);
+    }
+
+    @Inject(method = "recalculateUpgrades", at = @At("TAIL"))
+    private void overmek$resetWarmupOnSpeedUpgrade(Upgrade upgrade, CallbackInfo ci) {
+        if (upgrade == Upgrade.SPEED) {
+            TileEntityMekanism self = (TileEntityMekanism) (Object) this;
+            CircuitBoardOverclockHelper.resetWarmup(self);
+        }
     }
 }
