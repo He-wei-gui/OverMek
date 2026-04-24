@@ -248,16 +248,17 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getDisplayedSpeedMultiplier(TileEntityMekanism tile, ItemStack stack) {
-        double fullSpeed = getFullSpeedMultiplier(tile, stack);
-        if (fullSpeed <= 1.0D) {
-            return getActualSpeedMultiplier(tile);
+        int tier = getCircuitBoardTier(stack);
+        int overclockCount = getCircuitBoardOverclockCount(stack);
+        if (tier < 0 || overclockCount <= 0) {
+            return 1.0D;
         }
-        int fullWarmupTicksRequired = getFullWarmupTicksRequired(tile, stack);
-        int currentTicks = getCurrentTicksRequired(tile);
-        if (fullWarmupTicksRequired > 0 && currentTicks > 0 && currentTicks <= fullWarmupTicksRequired) {
-            return fullSpeed;
-        }
-        return getActualSpeedMultiplier(tile);
+        return getBoardSpeedMultiplier(
+            tier,
+            overclockCount,
+            tile instanceof TileEntityFactory<?>,
+            getDisplayedWarmupRatio(tile, stack)
+        );
     }
 
     public static double getActualWarmupRatio(TileEntityMekanism tile, ItemStack stack) {
@@ -279,16 +280,12 @@ public final class CircuitBoardOverclockHelper {
         if (tier < 0 || overclockCount <= 0) {
             return 1.0D;
         }
-        int fullWarmupTicksRequired = getFullWarmupTicksRequired(tile, stack);
-        int currentTicks = getCurrentTicksRequired(tile);
-        if (fullWarmupTicksRequired > 0 && currentTicks > 0 && currentTicks <= fullWarmupTicksRequired) {
+        int warmupTicks = getWarmupTicksForTier(tier);
+        if (!OverMekConfig.isWarmupEnabled() || warmupTicks <= 0) {
             return 1.0D;
         }
-        double fullSpeed = getBoardSpeedMultiplier(tier, overclockCount, tile instanceof TileEntityFactory<?>);
-        double displayedSpeed = getDisplayedSpeedMultiplier(tile, stack);
-        double numerator = Math.max(0.0D, displayedSpeed - 1.0D);
-        double denominator = Math.max(0.0001D, fullSpeed - 1.0D);
-        return Math.min(1.0D, numerator / denominator);
+        int syncedWarmup = getDisplayedWarmupProgress(tile);
+        return Math.min(1.0D, Math.max(0.0D, syncedWarmup / (double) warmupTicks));
     }
 
     public static double getActualEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
@@ -317,6 +314,13 @@ public final class CircuitBoardOverclockHelper {
             tile instanceof TileEntityFactory<?>,
             getDisplayedWarmupRatio(tile, stack)
         );
+    }
+
+    public static int getDisplayedWarmupProgress(TileEntityMekanism tile) {
+        if (tile instanceof ICircuitBoardDisplayData displayData) {
+            return displayData.overmek$getSyncedWarmupProgress();
+        }
+        return getWarmupProgress(tile);
     }
 
     public static int getFullWarmupTicksRequired(TileEntityMekanism tile, ItemStack stack) {
