@@ -411,31 +411,31 @@ public final class OverMekConfig {
                 .define("enabled", true);
 
             builder.push("basic");
-            basicGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.15D, 1.0D, 64.0D);
-            basicGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.2D, 1.0D, 64.0D);
-            basicGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 80, 0, 24_000);
-            basicGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 1.25D, 1.0D, 64.0D);
+            basicGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.4D, 1.0D, 64.0D);
+            basicGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.65D, 1.0D, 64.0D);
+            basicGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 100, 0, 24_000);
+            basicGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 1.5D, 1.0D, 64.0D);
             builder.pop();
 
             builder.push("advanced");
-            advancedGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.45D, 1.0D, 64.0D);
-            advancedGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.55D, 1.0D, 64.0D);
-            advancedGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 120, 0, 24_000);
-            advancedGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 1.75D, 1.0D, 64.0D);
+            advancedGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 2.0D, 1.0D, 64.0D);
+            advancedGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 2.4D, 1.0D, 64.0D);
+            advancedGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 150, 0, 24_000);
+            advancedGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 2.2D, 1.0D, 64.0D);
             builder.pop();
 
             builder.push("elite");
-            eliteGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.8D, 1.0D, 64.0D);
-            eliteGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 1.85D, 1.0D, 64.0D);
-            eliteGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 160, 0, 24_000);
-            eliteGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 2.4D, 1.0D, 64.0D);
+            eliteGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 2.6D, 1.0D, 64.0D);
+            eliteGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 3.0D, 1.0D, 64.0D);
+            eliteGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 210, 0, 24_000);
+            eliteGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 3.0D, 1.0D, 64.0D);
             builder.pop();
 
             builder.push("ultimate");
-            ultimateGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 2.25D, 1.0D, 64.0D);
-            ultimateGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 2.5D, 1.0D, 64.0D);
-            ultimateGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 220, 0, 24_000);
-            ultimateGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 3.25D, 1.0D, 64.0D);
+            ultimateGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 3.4D, 1.0D, 64.0D);
+            ultimateGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 4.1D, 1.0D, 64.0D);
+            ultimateGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 280, 0, 24_000);
+            ultimateGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 4.25D, 1.0D, 64.0D);
             builder.pop();
 
             builder.pop();
