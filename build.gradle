@@ -63,12 +63,9 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
 
-    // 改这里：用完整包编译，而不是只用 api 包
-    implementation fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80")
-    // Mekanism 完整包（运行时测试用）
-    runtimeOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")
+    // Use the full Mekanism bundle so generator classes are available at compile time.
+    implementation fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")
 
-    // Mixin annotation processor
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI for dev runtime and recipe viewing
@@ -76,6 +73,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 }
+
 processResources {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
@@ -90,7 +88,7 @@ processResources {
             mod_authors            : mod_authors,
             mod_description        : mod_description
     ]
-inputs.properties replaceProperties
+    inputs.properties replaceProperties
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties
     }
@@ -99,13 +97,13 @@ inputs.properties replaceProperties
 jar {
     manifest {
         attributes([
-            "Specification-Title"     : "overmek",
-            "Specification-Vendor"    : "hewiegui",
-            "Specification-Version"   : "1",
-            "Implementation-Title"    : project.name,
-            "Implementation-Version"  : project.jar.archiveVersion,
-            "Implementation-Vendor"   : "hewiegui",
-            "MixinConfigs"           : "overmek.mixins.json"
+            "Specification-Title"   : "overmek",
+            "Specification-Vendor"  : "hewiegui",
+            "Specification-Version" : "1",
+            "Implementation-Title"  : project.name,
+            "Implementation-Version": project.jar.archiveVersion,
+            "Implementation-Vendor" : "hewiegui",
+            "MixinConfigs"          : "overmek.mixins.json"
         ])
     }
 }

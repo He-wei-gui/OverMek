@@ -119,6 +119,46 @@ public final class OverMekConfig {
         return COMMON.generatorBoardProfilesEnabled.get();
     }
 
+    public static double getGeneratorGenerationMultiplier(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicGeneratorGenerationMultiplier.get();
+            case 1 -> COMMON.advancedGeneratorGenerationMultiplier.get();
+            case 2 -> COMMON.eliteGeneratorGenerationMultiplier.get();
+            case 3 -> COMMON.ultimateGeneratorGenerationMultiplier.get();
+            default -> 1.0D;
+        };
+    }
+
+    public static double getGeneratorFuelConsumptionMultiplier(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicGeneratorFuelConsumptionMultiplier.get();
+            case 1 -> COMMON.advancedGeneratorFuelConsumptionMultiplier.get();
+            case 2 -> COMMON.eliteGeneratorFuelConsumptionMultiplier.get();
+            case 3 -> COMMON.ultimateGeneratorFuelConsumptionMultiplier.get();
+            default -> 1.0D;
+        };
+    }
+
+    public static int getGeneratorStartupWarmupTicks(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicGeneratorStartupWarmupTicks.get();
+            case 1 -> COMMON.advancedGeneratorStartupWarmupTicks.get();
+            case 2 -> COMMON.eliteGeneratorStartupWarmupTicks.get();
+            case 3 -> COMMON.ultimateGeneratorStartupWarmupTicks.get();
+            default -> 0;
+        };
+    }
+
+    public static double getGeneratorEnergyCapacityFactor(int tier) {
+        return switch (tier) {
+            case 0 -> COMMON.basicGeneratorEnergyCapacityFactor.get();
+            case 1 -> COMMON.advancedGeneratorEnergyCapacityFactor.get();
+            case 2 -> COMMON.eliteGeneratorEnergyCapacityFactor.get();
+            case 3 -> COMMON.ultimateGeneratorEnergyCapacityFactor.get();
+            default -> 1.0D;
+        };
+    }
+
     public static final class Common {
 
         final ForgeConfigSpec.BooleanValue overclockEnabled;
@@ -367,8 +407,8 @@ public final class OverMekConfig {
             builder.push("generatorBoards");
 
             generatorBoardProfilesEnabled = builder
-                .comment("Reserved for future Mekanism Generators integration. Kept disabled until generator support is implemented.")
-                .define("enabled", false);
+                .comment("Whether circuit board effects should apply to Mekanism single-block generators.")
+                .define("enabled", true);
 
             builder.push("basic");
             basicGeneratorGenerationMultiplier = builder.defineInRange("generationMultiplier", 1.15D, 1.0D, 64.0D);

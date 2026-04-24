@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.mixin.client;
 
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
+import com.hewiegui.overmek.util.CircuitBoardGeneratorHelper;
 import com.hewiegui.overmek.inventory.CircuitBoardContainerSlot;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -65,6 +66,21 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
         List<Component> lines = new ArrayList<>();
         if (!CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(tile)) {
             lines.add(Component.translatable("tooltip.overmek.machine_disabled"));
+            return lines;
+        }
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            double generationMultiplier = CircuitBoardGeneratorHelper.getDisplayedGenerationMultiplier(tile, stack);
+            double fuelMultiplier = CircuitBoardGeneratorHelper.getDisplayedFuelConsumptionMultiplier(tile, stack);
+            double warmupRatio = CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
+            int tier = CircuitBoardOverclockHelper.getCircuitBoardTier(stack);
+            double capacityMultiplier = tier < 0 ? 1.0D : CircuitBoardGeneratorHelper.getEnergyCapacityMultiplier(tile, tier);
+
+            lines.add(Component.translatable("tooltip.overmek.current_generation_multiplier", OVERMEK_DECIMAL.format(generationMultiplier)));
+            if (CircuitBoardGeneratorHelper.isFuelGenerator(tile)) {
+                lines.add(Component.translatable("tooltip.overmek.current_fuel_multiplier", OVERMEK_DECIMAL.format(fuelMultiplier)));
+            }
+            lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(capacityMultiplier)));
+            lines.add(Component.translatable("tooltip.overmek.current_warmup", OVERMEK_DECIMAL.format(warmupRatio * 100.0D)));
             return lines;
         }
         double speedMultiplier = CircuitBoardOverclockHelper.getDisplayedSpeedMultiplier(tile, stack);

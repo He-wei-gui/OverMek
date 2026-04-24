@@ -8,11 +8,17 @@
     "AccessorTileEntityProgressMachine",
     "MixinMachineEnergyContainer",
     "MixinMekanismTileContainer",
+    "MixinTileEntityBioGenerator",
+    "MixinTileEntityGasGenerator",
+    "MixinTileEntityGenerator",
+    "MixinTileEntityHeatGenerator",
     "MixinRecipeCacheLookupMonitor",
     "MixinTileEntityConfigurableMachine",
+    "MixinTileEntitySolarGenerator",
     "MixinTileEntityFactory",
     "MixinTileEntityMekanism",
-    "MixinTileEntityProgressMachine"
+    "MixinTileEntityProgressMachine",
+    "MixinTileEntityWindGenerator"
   ],
   "client": [
     "client.MixinGuiMekanism",

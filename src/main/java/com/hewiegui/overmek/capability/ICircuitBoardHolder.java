@@ -15,6 +15,10 @@ public interface ICircuitBoardHolder {
 
     void setWarmupProgress(int progress);
 
+    double getGeneratorFuelRemainder();
+
+    void setGeneratorFuelRemainder(double remainder);
+
     default boolean hasCircuitBoard() {
         ItemStack stack = getCircuitBoard();
         return !stack.isEmpty() && stack.getItem() instanceof CircuitBoardItem;

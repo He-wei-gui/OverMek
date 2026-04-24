@@ -19,6 +19,7 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
 
     private ItemStack circuitBoard = ItemStack.EMPTY;
     private int warmupProgress;
+    private double generatorFuelRemainder;
     private final LazyOptional<ICircuitBoardHolder> optional = LazyOptional.of(() -> this);
     private final BlockEntity blockEntity;
 
@@ -37,6 +38,7 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         circuitBoard = stack.copy();
         if (changedBoard) {
             warmupProgress = 0;
+            generatorFuelRemainder = 0.0D;
         }
         if (blockEntity != null) {
             blockEntity.setChanged();
@@ -60,6 +62,22 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
     }
 
     @Override
+    public double getGeneratorFuelRemainder() {
+        return generatorFuelRemainder;
+    }
+
+    @Override
+    public void setGeneratorFuelRemainder(double remainder) {
+        double clamped = Math.max(0.0D, remainder);
+        if (Math.abs(generatorFuelRemainder - clamped) > 0.0001D) {
+            generatorFuelRemainder = clamped;
+            if (blockEntity != null) {
+                blockEntity.setChanged();
+            }
+        }
+    }
+
+    @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return CIRCUIT_BOARD_CAPABILITY.orEmpty(cap, optional);
     }
@@ -73,6 +91,9 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         if (warmupProgress > 0) {
             tag.putInt("WarmupProgress", warmupProgress);
         }
+        if (generatorFuelRemainder > 0.0D) {
+            tag.putDouble("GeneratorFuelRemainder", generatorFuelRemainder);
+        }
         return tag;
     }
 
@@ -84,5 +105,6 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
             circuitBoard = ItemStack.EMPTY;
         }
         warmupProgress = tag.getInt("WarmupProgress");
+        generatorFuelRemainder = Math.max(0.0D, tag.getDouble("GeneratorFuelRemainder"));
     }
 }

@@ -24,6 +24,9 @@
   "tooltip.overmek.current_speed_multiplier": "Current speed: x%s",
   "tooltip.overmek.current_overclock_bonus": "Current overclock bonus: +%s",
   "tooltip.overmek.current_energy_multiplier": "Current energy draw: x%s/t",
+  "tooltip.overmek.current_generation_multiplier": "Current generation: x%s",
+  "tooltip.overmek.current_fuel_multiplier": "Current fuel use: x%s",
+  "tooltip.overmek.current_capacity_multiplier": "Current buffer capacity: x%s",
   "tooltip.overmek.current_warmup": "Current warmup: %s%%",
   "tooltip.overmek.current_ticks_required": "Current processing time: %s t"
 }

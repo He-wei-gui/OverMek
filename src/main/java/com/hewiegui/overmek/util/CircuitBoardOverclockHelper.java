@@ -29,7 +29,7 @@ public final class CircuitBoardOverclockHelper {
         if (!(blockEntity instanceof TileEntityMekanism)) {
             return false;
         }
-        if (!(blockEntity instanceof TileEntityRecipeMachine<?> || blockEntity instanceof TileEntityFactory<?>)) {
+        if (!(blockEntity instanceof TileEntityRecipeMachine<?> || blockEntity instanceof TileEntityFactory<?> || CircuitBoardGeneratorHelper.isSupportedGenerator((TileEntityMekanism) blockEntity))) {
             return false;
         }
         String className = blockEntity.getClass().getName();
@@ -41,7 +41,7 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static boolean shouldExposeCircuitBoardSlot(BlockEntity blockEntity, @Nullable ICircuitBoardHolder holder) {
-        if (!(blockEntity instanceof TileEntityMekanism tile) || !tile.supportsUpgrades()) {
+        if (!(blockEntity instanceof TileEntityMekanism tile) || !tile.hasGui()) {
             return false;
         }
         return canApplyCircuitBoardEffects(blockEntity) || holder != null && holder.hasCircuitBoard();
@@ -82,6 +82,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getEnergyUsageMultiplier(TileEntityMekanism tile) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return 1.0D;
+        }
         ICircuitBoardHolder holder = getHolder(tile);
         if (holder == null || !holder.hasCircuitBoard()) {
             return 1.0D;
@@ -104,7 +107,12 @@ public final class CircuitBoardOverclockHelper {
 
     public static int getWarmupTicks(TileEntityMekanism tile) {
         int tier = getInstalledTier(tile);
-        return tier < 0 ? 0 : OverMekConfig.getTierWarmupTicks(tier);
+        if (tier < 0) {
+            return 0;
+        }
+        return CircuitBoardGeneratorHelper.isSupportedGenerator(tile)
+            ? OverMekConfig.getGeneratorStartupWarmupTicks(tier)
+            : OverMekConfig.getTierWarmupTicks(tier);
     }
 
     public static int getWarmupTicksForTier(int tier) {
@@ -160,12 +168,14 @@ public final class CircuitBoardOverclockHelper {
         }
         if (!holder.hasCircuitBoard() || !OverMekConfig.isWarmupEnabled()) {
             holder.setWarmupProgress(0);
+            holder.setGeneratorFuelRemainder(0.0D);
             return;
         }
         int tier = holder.getTier();
-        int warmupTicks = OverMekConfig.getTierWarmupTicks(tier);
+        int warmupTicks = getWarmupTicks(tile);
         if (warmupTicks <= 0) {
             holder.setWarmupProgress(0);
+            holder.setGeneratorFuelRemainder(0.0D);
             return;
         }
         int currentWarmup = holder.getWarmupProgress();
@@ -179,6 +189,7 @@ public final class CircuitBoardOverclockHelper {
         ICircuitBoardHolder holder = getHolder(tile);
         if (holder != null) {
             holder.setWarmupProgress(0);
+            holder.setGeneratorFuelRemainder(0.0D);
         }
     }
 
@@ -206,7 +217,9 @@ public final class CircuitBoardOverclockHelper {
         if (holder == null || !holder.hasCircuitBoard()) {
             return baseMaxEnergy;
         }
-        double capacityMultiplier = getBoardEnergyCapacityMultiplier(holder.getTier());
+        double capacityMultiplier = CircuitBoardGeneratorHelper.isSupportedGenerator(tile)
+            ? CircuitBoardGeneratorHelper.getEnergyCapacityMultiplier(tile, holder.getTier())
+            : getBoardEnergyCapacityMultiplier(holder.getTier());
         if (capacityMultiplier == 1.0D) {
             return baseMaxEnergy;
         }
@@ -227,6 +240,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static int getCurrentTicksRequired(TileEntityMekanism tile) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return -1;
+        }
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
             return ((AccessorTileEntityProgressMachine) progressMachine).overmek$getSyncedTicksRequired();
         }
@@ -237,6 +253,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static int getBaseTicksRequired(TileEntityMekanism tile) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return -1;
+        }
         int baseTicksRequired;
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
             baseTicksRequired = ((AccessorTileEntityProgressMachine) progressMachine).overmek$getBaseTicksRequired();
@@ -258,6 +277,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getDisplayedSpeedMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return 1.0D;
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {
@@ -272,6 +294,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getActualWarmupRatio(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return getDisplayedWarmupRatio(tile, stack);
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {
@@ -291,6 +316,9 @@ public final class CircuitBoardOverclockHelper {
             return 1.0D;
         }
         int warmupTicks = getWarmupTicksForTier(tier);
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            warmupTicks = OverMekConfig.getGeneratorStartupWarmupTicks(tier);
+        }
         if (!OverMekConfig.isWarmupEnabled() || warmupTicks <= 0) {
             return 1.0D;
         }
@@ -299,6 +327,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getActualEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return 1.0D;
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {
@@ -313,6 +344,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getDisplayedEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return 1.0D;
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {
@@ -345,6 +379,10 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static int getFullWarmupTicksRequired(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            int tier = getCircuitBoardTier(stack);
+            return tier < 0 ? -1 : OverMekConfig.getGeneratorStartupWarmupTicks(tier);
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         int baseTicks = getBaseTicksRequired(tile);
@@ -359,6 +397,9 @@ public final class CircuitBoardOverclockHelper {
     }
 
     public static double getFullSpeedMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
+            return CircuitBoardGeneratorHelper.getDisplayedGenerationMultiplier(tile, stack);
+        }
         int tier = getCircuitBoardTier(stack);
         int overclockCount = getCircuitBoardOverclockCount(stack);
         if (tier < 0 || overclockCount <= 0) {

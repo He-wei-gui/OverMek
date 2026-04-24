@@ -22,7 +22,8 @@ public class AttachCapabilityHandler {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         BlockEntity be = event.getObject();
-        if (be.getClass().getName().startsWith("mekanism.common.tile")) {
+        if (be.getClass().getName().startsWith("mekanism.common.tile")
+            || be.getClass().getName().startsWith("mekanism.generators.common.tile")) {
             LOGGER.debug("OverMek attaching circuit board capability to {}", be.getClass().getName());
             event.addCapability(CIRCUIT_BOARD_CAP, new CircuitBoardHolder(be));
         }
@@ -40,7 +41,8 @@ public class AttachCapabilityHandler {
         }
 
         BlockEntity be = level.getBlockEntity(event.getPos());
-        if (be == null || !be.getClass().getName().startsWith("mekanism.common.tile")) {
+        if (be == null || !(be.getClass().getName().startsWith("mekanism.common.tile")
+            || be.getClass().getName().startsWith("mekanism.generators.common.tile"))) {
             return;
         }
 
