@@ -3,10 +3,9 @@ package com.hewiegui.overmek.mixin;
 import com.hewiegui.overmek.capability.CircuitBoardHolder;
 import com.hewiegui.overmek.inventory.CircuitBoardInventorySlot;
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
+import com.hewiegui.overmek.util.CircuitBoardSlotLayoutHelper;
 import com.mojang.logging.LogUtils;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
-import mekanism.common.tile.factory.TileEntityFactory;
-import mekanism.common.tier.FactoryTier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.slf4j.Logger;
@@ -18,10 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MekanismTileContainer.class, remap = false)
 public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
 
-    private static final int OVERMEK_DEFAULT_GUI_WIDTH = 176;
-    private static final int OVERMEK_ULTIMATE_FACTORY_GUI_WIDTH = 210;
-    private static final int OVERMEK_EXTERNAL_SLOT_X_OFFSET = 1;
-    private static final int OVERMEK_EXTERNAL_SLOT_Y = 66;
     private static final Logger overmek$logger = LogUtils.getLogger();
 
     protected MixinMekanismTileContainer() {
@@ -56,8 +51,8 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
             return;
         }
 
-        int slotX = overmek$getCircuitBoardSlotX(be);
-        int slotY = overmek$getCircuitBoardSlotY(be);
+        int slotX = CircuitBoardSlotLayoutHelper.getSlotX(be);
+        int slotY = CircuitBoardSlotLayoutHelper.getSlotY(be);
         CircuitBoardInventorySlot inventorySlot = new CircuitBoardInventorySlot(holder, be, slotX, slotY);
         var containerSlot = inventorySlot.createContainerSlot();
         if (containerSlot == null) {
@@ -66,28 +61,14 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
         }
         addSlot(containerSlot);
         overmek$logger.debug(
-            "OverMek added circuit board slot to container {} for {}. slotIndex={}, totalSlots={}, pos=({}, {}), layout=external_right",
+            "OverMek added circuit board slot to container {} for {}. slotIndex={}, totalSlots={}, pos=({}, {}), layout={}",
             self.getClass().getName(),
             be.getClass().getName(),
             containerSlot.index,
             slots.size(),
             slotX,
-            slotY
+            slotY,
+            CircuitBoardSlotLayoutHelper.getLayoutName(be)
         );
-    }
-
-    private static int overmek$getCircuitBoardSlotX(BlockEntity be) {
-        return overmek$getGuiWidth(be) + OVERMEK_EXTERNAL_SLOT_X_OFFSET;
-    }
-
-    private static int overmek$getCircuitBoardSlotY(BlockEntity be) {
-        return OVERMEK_EXTERNAL_SLOT_Y;
-    }
-
-    private static int overmek$getGuiWidth(BlockEntity be) {
-        if (be instanceof TileEntityFactory<?> factory && factory.tier == FactoryTier.ULTIMATE) {
-            return OVERMEK_ULTIMATE_FACTORY_GUI_WIDTH;
-        }
-        return OVERMEK_DEFAULT_GUI_WIDTH;
     }
 }
