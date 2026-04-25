@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "AEA",
-    "BCB",
+    "MCM",
     "AEA"
   ],
   "key": {
@@ -12,8 +12,8 @@
     "E": {
       "item": "mekanism:energy_tablet"
     },
-    "B": {
-      "item": "overmek:basic_circuit_board"
+    "M": {
+      "item": "overmek:advanced_circuit_matrix"
     },
     "C": {
       "item": "mekanism:advanced_control_circuit"

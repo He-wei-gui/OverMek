@@ -99,6 +99,7 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
                 lines.add(Component.translatable("tooltip.overmek.current_stability_multiplier", OVERMEK_DECIMAL.format(displayState.stabilityMultiplier())));
                 lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
                 lines.add(Component.translatable("tooltip.overmek.current_pressure_multiplier", OVERMEK_DECIMAL.format(displayState.pressureMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_energy_multiplier", OVERMEK_DECIMAL.format(displayState.energyMultiplier())));
             }
             case GENERATOR -> {
                 lines.add(Component.translatable("tooltip.overmek.current_generation_multiplier", OVERMEK_DECIMAL.format(displayState.generationMultiplier())));

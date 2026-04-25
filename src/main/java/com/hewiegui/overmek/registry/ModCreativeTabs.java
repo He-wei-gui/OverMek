@@ -20,6 +20,11 @@ public class ModCreativeTabs {
                 .title(Component.translatable("itemGroup.overmek"))
                 .icon(() -> new ItemStack(ModItems.ULTIMATE_CIRCUIT_BOARD.get()))
                 .displayItems((params, output) -> {
+                    output.accept(ModItems.BLANK_CIRCUIT_SUBSTRATE.get());
+                    output.accept(ModItems.BASIC_CIRCUIT_MATRIX.get());
+                    output.accept(ModItems.ADVANCED_CIRCUIT_MATRIX.get());
+                    output.accept(ModItems.ELITE_CIRCUIT_MATRIX.get());
+                    output.accept(ModItems.ULTIMATE_CIRCUIT_MATRIX.get());
                     output.accept(ModItems.BASIC_CIRCUIT_BOARD.get());
                     output.accept(ModItems.ADVANCED_CIRCUIT_BOARD.get());
                     output.accept(ModItems.ELITE_CIRCUIT_BOARD.get());

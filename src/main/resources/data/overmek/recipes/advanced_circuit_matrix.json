@@ -1,0 +1,15 @@
+{
+  "type": "mekanism:metallurgic_infusing",
+  "chemicalInput": {
+    "amount": 20,
+    "tag": "mekanism:diamond"
+  },
+  "itemInput": {
+    "ingredient": {
+      "item": "overmek:basic_circuit_matrix"
+    }
+  },
+  "output": {
+    "item": "overmek:advanced_circuit_matrix"
+  }
+}

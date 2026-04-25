@@ -42,7 +42,7 @@ public final class BoardProfileLoader {
             OverMekConfig.getEvaporationWarmupTicks(), OverMekConfig.getEvaporationWarmupCooldown()
         ));
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.SPS_MULTIBLOCK, new BoardEffectProfile(
-            CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D,
+            CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, OverMekConfig.getSpsEnergyUsageMultiplier(), 1.0D, 1.0D, 0.0D, 0.0D,
             1.0D, 1.0D, OverMekConfig.getSpsBufferMultiplier(), 1.0D, 1.0D, OverMekConfig.getSpsThroughputMultiplier(),
             OverMekConfig.getSpsStabilityMultiplier(), OverMekConfig.getSpsPressureMultiplier(),
             OverMekConfig.getSpsWarmupTicks(), OverMekConfig.getSpsWarmupCooldown()
@@ -104,7 +104,7 @@ public final class BoardProfileLoader {
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.FISSION, new BoardEffectProfile(CircuitBoardChannel.FISSION, 0, 2.2D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 3.8D, 1.0D, 1.0D, 1.0D, 2.7D, 1.0D, 260, 2));
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.POWER_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.POWER_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 3.0D, 3.6D, 4.2D, 5.8D, 4.2D, 1.0D, 1.0D, 1.0D, 220, 2));
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.EVAPORATION_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.EVAPORATION_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 3.2D, 1.0D, 1.0D, 3.8D, 1.0D, 1.0D, 180, 2));
-        MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.SPS_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 3.6D, 1.0D, 1.0D, 3.4D, 2.2D, 2.9D, 320, 1));
+        MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.SPS_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, 0.68D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 4.8D, 1.0D, 1.0D, 4.6D, 2.8D, 4.2D, 3200, 2));
         loaded = true;
     }
 

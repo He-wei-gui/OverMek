@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "ATA",
-    "BCB",
+    "MCM",
     "ATA"
   ],
   "key": {
@@ -12,8 +12,8 @@
     "T": {
       "item": "mekanism:teleportation_core"
     },
-    "B": {
-      "item": "overmek:advanced_circuit_board"
+    "M": {
+      "item": "overmek:elite_circuit_matrix"
     },
     "C": {
       "item": "mekanism:elite_control_circuit"

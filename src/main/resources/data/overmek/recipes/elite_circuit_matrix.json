@@ -1,0 +1,15 @@
+{
+  "type": "mekanism:metallurgic_infusing",
+  "chemicalInput": {
+    "amount": 40,
+    "tag": "mekanism:refined_obsidian"
+  },
+  "itemInput": {
+    "ingredient": {
+      "item": "overmek:advanced_circuit_matrix"
+    }
+  },
+  "output": {
+    "item": "overmek:elite_circuit_matrix"
+  }
+}

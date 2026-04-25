@@ -1,4 +1,9 @@
 {
+  "item.overmek.blank_circuit_substrate": "Blank Circuit Substrate",
+  "item.overmek.basic_circuit_matrix": "Basic Circuit Matrix",
+  "item.overmek.advanced_circuit_matrix": "Advanced Circuit Matrix",
+  "item.overmek.elite_circuit_matrix": "Elite Circuit Matrix",
+  "item.overmek.ultimate_circuit_matrix": "Ultimate Circuit Matrix",
   "item.overmek.basic_circuit_board": "Basic Circuit Board",
   "item.overmek.advanced_circuit_board": "Advanced Circuit Board",
   "item.overmek.elite_circuit_board": "Elite Circuit Board",
@@ -25,6 +30,7 @@
   "tooltip.overmek.sps_throughput_profile": "SPS throughput: x%s",
   "tooltip.overmek.sps_stability_profile": "SPS stability: x%s",
   "tooltip.overmek.sps_pressure_profile": "SPS pressure profile: x%s",
+  "tooltip.overmek.sps_energy_profile": "SPS energy usage: x%s",
   "tooltip.overmek.board_role_basic": "Role: Gentle speed-up for early setups",
   "tooltip.overmek.board_role_advanced": "Role: Bigger speed spike for raw throughput",
   "tooltip.overmek.board_role_elite": "Role: Fast processing with softer energy penalty",

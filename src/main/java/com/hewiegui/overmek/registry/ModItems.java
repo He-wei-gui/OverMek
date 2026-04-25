@@ -44,4 +44,24 @@ public class ModItems {
     public static final RegistryObject<CircuitBoardItem> SPS_CIRCUIT_BOARD =
         ITEMS.register("sps_circuit_board",
             () -> new CircuitBoardItem(CircuitBoardChannel.SPS_MULTIBLOCK, 0, 0));
+
+    public static final RegistryObject<Item> BLANK_CIRCUIT_SUBSTRATE =
+        ITEMS.register("blank_circuit_substrate",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> BASIC_CIRCUIT_MATRIX =
+        ITEMS.register("basic_circuit_matrix",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ADVANCED_CIRCUIT_MATRIX =
+        ITEMS.register("advanced_circuit_matrix",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ELITE_CIRCUIT_MATRIX =
+        ITEMS.register("elite_circuit_matrix",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ULTIMATE_CIRCUIT_MATRIX =
+        ITEMS.register("ultimate_circuit_matrix",
+            () -> new Item(new Item.Properties()));
 }

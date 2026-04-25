@@ -451,7 +451,7 @@ public final class CircuitBoardOverclockHelper {
                 warmupRatio,
                 1.0D,
                 0.0D,
-                1.0D,
+                MultiblockBoardService.getDisplayedSpsEnergyUsageMultiplier(tile, stack),
                 1.0D,
                 1.0D,
                 MultiblockBoardService.getDisplayedSpsStabilityMultiplier(tile, stack),

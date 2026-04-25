@@ -1,0 +1,15 @@
+{
+  "type": "mekanism:metallurgic_infusing",
+  "chemicalInput": {
+    "amount": 10,
+    "tag": "mekanism:redstone"
+  },
+  "itemInput": {
+    "ingredient": {
+      "item": "overmek:blank_circuit_substrate"
+    }
+  },
+  "output": {
+    "item": "overmek:basic_circuit_matrix"
+  }
+}

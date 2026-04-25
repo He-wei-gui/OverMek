@@ -100,6 +100,7 @@ public class CircuitBoardItem extends Item {
                 tooltips.add(Component.translatable("tooltip.overmek.sps_stability_profile", OVERMEK_DECIMAL.format(profile.stabilityMultiplier())));
                 tooltips.add(Component.translatable("tooltip.overmek.multiblock_buffer_profile", OVERMEK_DECIMAL.format(profile.bufferMultiplier())));
                 tooltips.add(Component.translatable("tooltip.overmek.sps_pressure_profile", OVERMEK_DECIMAL.format(profile.pressureMultiplier())));
+                tooltips.add(Component.translatable("tooltip.overmek.sps_energy_profile", OVERMEK_DECIMAL.format(profile.energyUsageFactor())));
                 tooltips.add(Component.translatable("tooltip.overmek.warmup_profile", profile.warmupTicks()));
             }
             default -> {

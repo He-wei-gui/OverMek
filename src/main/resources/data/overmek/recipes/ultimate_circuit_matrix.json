@@ -10,16 +10,16 @@
       "tag": "mekanism:alloys/atomic"
     },
     "E": {
-      "item": "mekanism:elite_energy_cube"
+      "item": "mekanism:energy_tablet"
     },
     "M": {
-      "item": "overmek:ultimate_circuit_matrix"
+      "item": "overmek:elite_circuit_matrix"
     },
     "C": {
       "item": "mekanism:ultimate_control_circuit"
     }
   },
   "result": {
-    "item": "overmek:ultimate_circuit_board"
+    "item": "overmek:ultimate_circuit_matrix"
   }
 }

@@ -102,6 +102,11 @@ public final class MultiblockBoardService {
         return profile.isSupported() ? profile.scaleMultiplier(profile.pressureMultiplier(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack)) : 1.0D;
     }
 
+    public static double getDisplayedSpsEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        BoardEffectProfile profile = BoardProfileLoader.getInstalledProfile(CircuitBoardProfileHelper.getSupportProfile(tile), stack);
+        return profile.isSupported() ? profile.scaleValue(profile.energyUsageFactor(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack)) : 1.0D;
+    }
+
     public static double getEffectiveSpsThroughputMultiplier(TileEntityMekanism tile) {
         BoardEffectProfile profile = getInstalledProfile(tile);
         return profile.isSupported() ? profile.scaleMultiplier(profile.throughputMultiplier(), CircuitBoardOverclockHelper.getWarmupRatio(tile)) : 1.0D;
@@ -120,6 +125,11 @@ public final class MultiblockBoardService {
     public static double getEffectiveSpsPressureMultiplier(TileEntityMekanism tile) {
         BoardEffectProfile profile = getInstalledProfile(tile);
         return profile.isSupported() ? profile.scaleMultiplier(profile.pressureMultiplier(), CircuitBoardOverclockHelper.getWarmupRatio(tile)) : 1.0D;
+    }
+
+    public static double getEffectiveSpsEnergyUsageMultiplier(TileEntityMekanism tile) {
+        BoardEffectProfile profile = getInstalledProfile(tile);
+        return profile.isSupported() ? profile.scaleValue(profile.energyUsageFactor(), CircuitBoardOverclockHelper.getWarmupRatio(tile)) : 1.0D;
     }
 
     public static double getDisplayedBufferMultiplier(TileEntityMekanism tile, ItemStack stack) {

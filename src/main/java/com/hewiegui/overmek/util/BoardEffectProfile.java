@@ -37,6 +37,10 @@ public record BoardEffectProfile(
         return 1.0D + Math.max(0.0D, fullMultiplier - 1.0D) * clampWarmup(warmupRatio);
     }
 
+    public double scaleValue(double targetValue, double warmupRatio) {
+        return 1.0D + (targetValue - 1.0D) * clampWarmup(warmupRatio);
+    }
+
     public double getSpeedBonus(int overclockCount, boolean factory, int globalMaxBonus) {
         if (!isSupported() || overclockCount <= 0) {
             return 0.0D;

@@ -243,6 +243,10 @@ public final class OverMekConfig {
         return COMMON.spsPressureMultiplier.get();
     }
 
+    public static double getSpsEnergyUsageMultiplier() {
+        return COMMON.spsEnergyUsageMultiplier.get();
+    }
+
     public static int getSpsWarmupTicks() {
         return COMMON.spsWarmupTicks.get();
     }
@@ -330,6 +334,7 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue spsStabilityMultiplier;
         final ForgeConfigSpec.DoubleValue spsBufferMultiplier;
         final ForgeConfigSpec.DoubleValue spsPressureMultiplier;
+        final ForgeConfigSpec.DoubleValue spsEnergyUsageMultiplier;
         final ForgeConfigSpec.IntValue spsWarmupTicks;
         final ForgeConfigSpec.IntValue spsWarmupCooldown;
 
@@ -587,12 +592,13 @@ public final class OverMekConfig {
             builder.pop();
 
             builder.push("sps");
-            spsThroughputMultiplier = builder.defineInRange("throughputMultiplier", 3.4D, 1.0D, 64.0D);
-            spsStabilityMultiplier = builder.defineInRange("stabilityMultiplier", 2.2D, 1.0D, 64.0D);
-            spsBufferMultiplier = builder.defineInRange("bufferMultiplier", 3.6D, 1.0D, 64.0D);
-            spsPressureMultiplier = builder.defineInRange("pressureMultiplier", 2.9D, 1.0D, 64.0D);
-            spsWarmupTicks = builder.defineInRange("warmupTicks", 320, 0, 24_000);
-            spsWarmupCooldown = builder.defineInRange("warmupCooldown", 1, 1, 1_000);
+            spsThroughputMultiplier = builder.defineInRange("throughputMultiplier", 4.6D, 1.0D, 64.0D);
+            spsStabilityMultiplier = builder.defineInRange("stabilityMultiplier", 2.8D, 1.0D, 64.0D);
+            spsBufferMultiplier = builder.defineInRange("bufferMultiplier", 4.8D, 1.0D, 64.0D);
+            spsPressureMultiplier = builder.defineInRange("pressureMultiplier", 4.2D, 1.0D, 64.0D);
+            spsEnergyUsageMultiplier = builder.defineInRange("energyUsageMultiplier", 0.68D, 0.05D, 64.0D);
+            spsWarmupTicks = builder.defineInRange("warmupTicks", 3200, 0, 24_000);
+            spsWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
             builder.pop();
 
             builder.pop();

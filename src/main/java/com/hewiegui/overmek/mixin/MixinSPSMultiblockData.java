@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -75,6 +76,24 @@ public abstract class MixinSPSMultiblockData implements ICircuitBoardMultiblockD
         if (overmek$ownerTile != null) {
             cir.setReturnValue(cir.getReturnValue() * CircuitBoardMultiblockHelper.getEffectiveSpsThroughputMultiplier(overmek$ownerTile));
         }
+    }
+
+    @ModifyArg(
+        method = "supplyCoilEnergy",
+        at = @At(value = "INVOKE", target = "Lmekanism/api/math/FloatingLong;plusEqual(Lmekanism/api/math/FloatingLong;)Lmekanism/api/math/FloatingLong;"),
+        index = 0
+    )
+    private mekanism.api.math.FloatingLong overmek$reduceSpsEnergyUsageForInternalBuffer(mekanism.api.math.FloatingLong amount) {
+        return overmek$adjustSuppliedEnergy(amount);
+    }
+
+    @ModifyArg(
+        method = "supplyCoilEnergy",
+        at = @At(value = "INVOKE", target = "Lmekanism/common/content/sps/SPSMultiblockData$CoilData;receiveEnergy(Lmekanism/api/math/FloatingLong;)V"),
+        index = 0
+    )
+    private mekanism.api.math.FloatingLong overmek$reduceSpsEnergyUsageForCoilDisplay(mekanism.api.math.FloatingLong amount) {
+        return overmek$adjustSuppliedEnergy(amount);
     }
 
     private long overmek$processExtraInput() {
@@ -132,6 +151,18 @@ public abstract class MixinSPSMultiblockData implements ICircuitBoardMultiblockD
         for (Entity entity : world.getEntitiesOfClass(Entity.class, deathZone)) {
             entity.hurt(entity.damageSources().magic(), damage);
         }
+    }
+
+    @Unique
+    private mekanism.api.math.FloatingLong overmek$adjustSuppliedEnergy(mekanism.api.math.FloatingLong amount) {
+        if (overmek$ownerTile == null || amount == null || amount.isZero()) {
+            return amount;
+        }
+        double energyUsageMultiplier = CircuitBoardMultiblockHelper.getEffectiveSpsEnergyUsageMultiplier(overmek$ownerTile);
+        if (energyUsageMultiplier <= 0.0D || energyUsageMultiplier == 1.0D) {
+            return amount;
+        }
+        return amount.divide(energyUsageMultiplier);
     }
 
     @Override

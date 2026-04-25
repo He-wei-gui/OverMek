@@ -114,6 +114,10 @@ public final class CircuitBoardMultiblockHelper {
         return MultiblockBoardService.getDisplayedSpsPressureMultiplier(tile, stack);
     }
 
+    public static double getDisplayedSpsEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
+        return MultiblockBoardService.getDisplayedSpsEnergyUsageMultiplier(tile, stack);
+    }
+
     public static double getEffectiveSpsThroughputMultiplier(TileEntityMekanism tile) {
         return MultiblockBoardService.getEffectiveSpsThroughputMultiplier(tile);
     }
@@ -128,6 +132,10 @@ public final class CircuitBoardMultiblockHelper {
 
     public static double getEffectiveSpsPressureMultiplier(TileEntityMekanism tile) {
         return MultiblockBoardService.getEffectiveSpsPressureMultiplier(tile);
+    }
+
+    public static double getEffectiveSpsEnergyUsageMultiplier(TileEntityMekanism tile) {
+        return MultiblockBoardService.getEffectiveSpsEnergyUsageMultiplier(tile);
     }
 
     public static double getDisplayedBufferMultiplier(TileEntityMekanism tile, ItemStack stack) {

@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "LPL",
+    "ALA",
     "CBC",
-    "LSL"
+    "HSH"
   ],
   "key": {
     "L": {
       "item": "mekanism:laser"
     },
-    "P": {
-      "item": "mekanism:polonium_pellet"
+    "A": {
+      "item": "mekanism:pellet_antimatter"
     },
     "C": {
       "item": "mekanism:ultimate_control_circuit"
@@ -19,7 +19,10 @@
       "item": "overmek:power_multiblock_circuit_board"
     },
     "S": {
-      "item": "mekanism:sps_casing"
+      "item": "mekanism:sps_port"
+    },
+    "H": {
+      "item": "mekanism:supercharged_coil"
     }
   },
   "result": {
