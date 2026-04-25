@@ -41,8 +41,6 @@ public final class CircuitBoardProfileHelper {
             machineProfile = CircuitBoardMachineProfile.SPS_MULTIBLOCK;
         } else if (GeneratorBoardService.isSupportedGenerator(tile)) {
             machineProfile = CircuitBoardMachineProfile.GENERATOR;
-        } else if (MoreMachineCompatHelper.isSupportedProcessingMachine(blockEntity)) {
-            machineProfile = CircuitBoardMachineProfile.PROCESSING;
         } else if (blockEntity instanceof TileEntityRecipeMachine<?> || blockEntity instanceof TileEntityFactory<?>) {
             machineProfile = CircuitBoardMachineProfile.PROCESSING;
         } else {

@@ -6,9 +6,6 @@
   "mixins": [
     "AccessorTileEntityFactory",
     "AccessorTileEntityProgressMachine",
-    "compat.moremachine.MixinTileEntityAdvancedFactoryBase",
-    "compat.moremachine.MixinTileEntityAmbientGasCollector",
-    "compat.moremachine.MixinTileEntityMoreMachineFactory",
     "MixinEvaporationMultiblockData",
     "MixinFissionReactorMultiblockData",
     "MixinFusionReactorMultiblockData",

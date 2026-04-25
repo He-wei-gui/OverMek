@@ -61,7 +61,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Use the full Mekanism bundle so generator classes are available at compile time.
     implementation fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")

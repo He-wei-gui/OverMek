@@ -214,10 +214,6 @@ public final class CircuitBoardOverclockHelper {
         if (GeneratorBoardService.isSupportedGenerator(tile)) {
             return -1;
         }
-        int compatTicks = MoreMachineCompatHelper.getCurrentTicksRequired(tile);
-        if (compatTicks > 0) {
-            return compatTicks;
-        }
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {
             return ((AccessorTileEntityProgressMachine) progressMachine).overmek$getSyncedTicksRequired();
         }
@@ -230,10 +226,6 @@ public final class CircuitBoardOverclockHelper {
     public static int getBaseTicksRequired(TileEntityMekanism tile) {
         if (GeneratorBoardService.isSupportedGenerator(tile)) {
             return -1;
-        }
-        int compatBaseTicks = MoreMachineCompatHelper.getBaseTicksRequired(tile);
-        if (compatBaseTicks > 0) {
-            return compatBaseTicks;
         }
         int baseTicksRequired;
         if (tile instanceof TileEntityProgressMachine<?> progressMachine) {

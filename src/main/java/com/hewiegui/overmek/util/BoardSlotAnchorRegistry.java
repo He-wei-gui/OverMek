@@ -19,9 +19,6 @@ public final class BoardSlotAnchorRegistry {
         if (usesDefaultLeftAnchor(blockEntity)) {
             return BoardSlotAnchor.DEFAULT_LEFT;
         }
-        if (MoreMachineCompatHelper.isUltimateLikeFactory(blockEntity)) {
-            return BoardSlotAnchor.ULTIMATE_FACTORY_RIGHT;
-        }
         if (blockEntity instanceof TileEntityFactory<?> factory && factory.tier == FactoryTier.ULTIMATE) {
             return BoardSlotAnchor.ULTIMATE_FACTORY_RIGHT;
         }
