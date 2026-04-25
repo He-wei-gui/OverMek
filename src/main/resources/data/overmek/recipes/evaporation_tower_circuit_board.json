@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HCH",
+    "SBS",
+    "HTH"
+  ],
+  "key": {
+    "H": {
+      "item": "mekanism:hdpe_sheet"
+    },
+    "C": {
+      "item": "mekanism:elite_control_circuit"
+    },
+    "B": {
+      "item": "overmek:elite_circuit_board"
+    },
+    "S": {
+      "item": "mekanism:superheating_element"
+    },
+    "T": {
+      "item": "mekanism:thermal_evaporation_controller"
+    }
+  },
+  "result": {
+    "item": "overmek:evaporation_tower_circuit_board",
+    "count": 1
+  }
+}

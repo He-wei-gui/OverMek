@@ -24,6 +24,10 @@ public class ModCreativeTabs {
                     output.accept(ModItems.ADVANCED_CIRCUIT_BOARD.get());
                     output.accept(ModItems.ELITE_CIRCUIT_BOARD.get());
                     output.accept(ModItems.ULTIMATE_CIRCUIT_BOARD.get());
+                    output.accept(ModItems.FISSION_REACTOR_CIRCUIT_BOARD.get());
+                    output.accept(ModItems.POWER_MULTIBLOCK_CIRCUIT_BOARD.get());
+                    output.accept(ModItems.EVAPORATION_TOWER_CIRCUIT_BOARD.get());
+                    output.accept(ModItems.SPS_CIRCUIT_BOARD.get());
                 })
                 .build()
         );

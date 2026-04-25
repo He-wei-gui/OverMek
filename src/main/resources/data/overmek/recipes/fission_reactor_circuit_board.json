@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GRG",
+    "CBC",
+    "GFG"
+  ],
+  "key": {
+    "G": {
+      "item": "mekanismgenerators:reactor_glass"
+    },
+    "R": {
+      "item": "mekanismgenerators:control_rod_assembly"
+    },
+    "C": {
+      "item": "mekanism:elite_control_circuit"
+    },
+    "B": {
+      "item": "overmek:ultimate_circuit_board"
+    },
+    "F": {
+      "item": "mekanismgenerators:fission_fuel_assembly"
+    }
+  },
+  "result": {
+    "item": "overmek:fission_reactor_circuit_board",
+    "count": 1
+  }
+}

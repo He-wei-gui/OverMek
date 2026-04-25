@@ -1,7 +1,8 @@
 package com.hewiegui.overmek.mixin.client;
 
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
-import com.hewiegui.overmek.util.CircuitBoardGeneratorHelper;
+import com.hewiegui.overmek.util.BoardSlotDisplayState;
+import com.hewiegui.overmek.util.BoardTooltipCategory;
 import com.hewiegui.overmek.inventory.CircuitBoardContainerSlot;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,34 +69,57 @@ public abstract class MixinGuiMekanismTile<TILE extends TileEntityMekanism, CONT
             lines.add(Component.translatable("tooltip.overmek.machine_disabled"));
             return lines;
         }
-        if (CircuitBoardGeneratorHelper.isSupportedGenerator(tile)) {
-            double generationMultiplier = CircuitBoardGeneratorHelper.getDisplayedGenerationMultiplier(tile, stack);
-            double fuelMultiplier = CircuitBoardGeneratorHelper.getDisplayedFuelConsumptionMultiplier(tile, stack);
-            double warmupRatio = CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
-            int tier = CircuitBoardOverclockHelper.getCircuitBoardTier(stack);
-            double capacityMultiplier = tier < 0 ? 1.0D : CircuitBoardGeneratorHelper.getEnergyCapacityMultiplier(tile, tier);
-
-            lines.add(Component.translatable("tooltip.overmek.current_generation_multiplier", OVERMEK_DECIMAL.format(generationMultiplier)));
-            if (CircuitBoardGeneratorHelper.isFuelGenerator(tile)) {
-                lines.add(Component.translatable("tooltip.overmek.current_fuel_multiplier", OVERMEK_DECIMAL.format(fuelMultiplier)));
-            }
-            lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(capacityMultiplier)));
-            lines.add(Component.translatable("tooltip.overmek.current_warmup", OVERMEK_DECIMAL.format(warmupRatio * 100.0D)));
+        BoardSlotDisplayState displayState = CircuitBoardOverclockHelper.getDisplayState(tile, stack);
+        if (!displayState.compatibleBoard()) {
+            lines.add(Component.translatable("tooltip.overmek.board_incompatible"));
             return lines;
         }
-        double speedMultiplier = CircuitBoardOverclockHelper.getDisplayedSpeedMultiplier(tile, stack);
-        double bonus = Math.max(0.0D, speedMultiplier - 1.0D);
-        double energyMultiplier = CircuitBoardOverclockHelper.getDisplayedEnergyUsageMultiplier(tile, stack);
-        double warmupRatio = CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
-        int ticksRequired = CircuitBoardOverclockHelper.getCurrentTicksRequired(tile);
-
-        lines.add(Component.translatable("tooltip.overmek.current_speed_multiplier", OVERMEK_DECIMAL.format(speedMultiplier)));
-        lines.add(Component.translatable("tooltip.overmek.current_overclock_bonus", OVERMEK_DECIMAL.format(bonus)));
-        lines.add(Component.translatable("tooltip.overmek.current_energy_multiplier", OVERMEK_DECIMAL.format(energyMultiplier)));
-        lines.add(Component.translatable("tooltip.overmek.current_warmup", OVERMEK_DECIMAL.format(warmupRatio * 100.0D)));
-        if (ticksRequired > 0) {
-            lines.add(Component.translatable("tooltip.overmek.current_ticks_required", ticksRequired));
+        switch (displayState.supportProfile().tooltipCategory()) {
+            case FISSION -> {
+                lines.add(Component.translatable("tooltip.overmek.current_cooling_multiplier", OVERMEK_DECIMAL.format(displayState.coolingMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_stability_multiplier", OVERMEK_DECIMAL.format(displayState.stabilityMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
+            }
+            case POWER_MULTIBLOCK -> {
+                if (displayState.matrixCapacityMultiplier() > 1.0D) {
+                    lines.add(Component.translatable("tooltip.overmek.current_matrix_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.matrixCapacityMultiplier())));
+                    lines.add(Component.translatable("tooltip.overmek.current_matrix_transfer_multiplier", OVERMEK_DECIMAL.format(displayState.matrixTransferMultiplier())));
+                } else {
+                    lines.add(Component.translatable("tooltip.overmek.current_generation_multiplier", OVERMEK_DECIMAL.format(displayState.generationMultiplier())));
+                    lines.add(Component.translatable("tooltip.overmek.current_fuel_multiplier", OVERMEK_DECIMAL.format(displayState.fuelMultiplier())));
+                    lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
+                }
+            }
+            case EVAPORATION_MULTIBLOCK -> {
+                lines.add(Component.translatable("tooltip.overmek.current_throughput_multiplier", OVERMEK_DECIMAL.format(displayState.throughputMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
+            }
+            case SPS_MULTIBLOCK -> {
+                lines.add(Component.translatable("tooltip.overmek.current_throughput_multiplier", OVERMEK_DECIMAL.format(displayState.throughputMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_stability_multiplier", OVERMEK_DECIMAL.format(displayState.stabilityMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_pressure_multiplier", OVERMEK_DECIMAL.format(displayState.pressureMultiplier())));
+            }
+            case GENERATOR -> {
+                lines.add(Component.translatable("tooltip.overmek.current_generation_multiplier", OVERMEK_DECIMAL.format(displayState.generationMultiplier())));
+                if (displayState.fuelMultiplier() > 1.0D) {
+                    lines.add(Component.translatable("tooltip.overmek.current_fuel_multiplier", OVERMEK_DECIMAL.format(displayState.fuelMultiplier())));
+                }
+                lines.add(Component.translatable("tooltip.overmek.current_capacity_multiplier", OVERMEK_DECIMAL.format(displayState.capacityMultiplier())));
+            }
+            case PROCESSING -> {
+                lines.add(Component.translatable("tooltip.overmek.current_speed_multiplier", OVERMEK_DECIMAL.format(displayState.speedMultiplier())));
+                lines.add(Component.translatable("tooltip.overmek.current_overclock_bonus", OVERMEK_DECIMAL.format(displayState.overclockBonus())));
+                lines.add(Component.translatable("tooltip.overmek.current_energy_multiplier", OVERMEK_DECIMAL.format(displayState.energyMultiplier())));
+                if (displayState.ticksRequired() > 0) {
+                    lines.add(Component.translatable("tooltip.overmek.current_ticks_required", displayState.ticksRequired()));
+                }
+            }
+            case UNSUPPORTED -> {
+                return lines;
+            }
         }
+        lines.add(Component.translatable("tooltip.overmek.current_warmup", OVERMEK_DECIMAL.format(displayState.warmupRatio() * 100.0D)));
         return lines;
     }
 }

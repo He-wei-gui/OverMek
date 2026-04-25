@@ -6,6 +6,11 @@
   "mixins": [
     "AccessorTileEntityFactory",
     "AccessorTileEntityProgressMachine",
+    "MixinEvaporationMultiblockData",
+    "MixinFissionReactorMultiblockData",
+    "MixinFusionReactorMultiblockData",
+    "MixinMatrixEnergyContainer",
+    "MixinMatrixMultiblockData",
     "MixinMachineEnergyContainer",
     "MixinMekanismTileContainer",
     "MixinTileEntityBioGenerator",
@@ -15,10 +20,12 @@
     "MixinRecipeCacheLookupMonitor",
     "MixinTileEntityConfigurableMachine",
     "MixinTileEntitySolarGenerator",
+    "MixinSPSMultiblockData",
     "MixinTileEntityFactory",
     "MixinTileEntityMekanism",
     "MixinTileEntityProgressMachine",
-    "MixinTileEntityWindGenerator"
+    "MixinTileEntityWindGenerator",
+    "MixinTurbineMultiblockData"
   ],
   "client": [
     "client.MixinGuiMekanism",

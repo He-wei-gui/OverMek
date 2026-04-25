@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IRI",
+    "CBC",
+    "IFI"
+  ],
+  "key": {
+    "I": {
+      "item": "mekanism:ultimate_induction_provider"
+    },
+    "R": {
+      "item": "mekanismgenerators:rotational_complex"
+    },
+    "C": {
+      "item": "mekanism:ultimate_control_circuit"
+    },
+    "B": {
+      "item": "overmek:ultimate_circuit_board"
+    },
+    "F": {
+      "item": "mekanismgenerators:fusion_reactor_controller"
+    }
+  },
+  "result": {
+    "item": "overmek:power_multiblock_circuit_board",
+    "count": 1
+  }
+}

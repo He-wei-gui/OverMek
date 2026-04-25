@@ -3,12 +3,12 @@ package com.hewiegui.overmek.mixin;
 import com.hewiegui.overmek.capability.CircuitBoardHolder;
 import com.hewiegui.overmek.inventory.CircuitBoardInventorySlot;
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
-import com.hewiegui.overmek.util.CircuitBoardSlotLayoutHelper;
-import com.mojang.logging.LogUtils;
+import com.hewiegui.overmek.util.BoardHostResolver;
+import com.hewiegui.overmek.util.BoardSlotDisplayState;
+import com.hewiegui.overmek.util.OverMekLog;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MekanismTileContainer.class, remap = false)
 public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
-
-    private static final Logger overmek$logger = LogUtils.getLogger();
 
     protected MixinMekanismTileContainer() {
         super(null, 0);
@@ -28,22 +26,24 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
         MekanismTileContainer<?> self = (MekanismTileContainer<?>) (Object) this;
         BlockEntity be = self.getTileEntity();
         if (be == null) {
-            overmek$logger.debug("OverMek skipped circuit board slot because tile entity is null for container {}", self.getClass().getName());
+            OverMekLog.debug("OverMek skipped circuit board slot because tile entity is null for container {}", self.getClass().getName());
             return;
         }
-        var holder = be.getCapability(CircuitBoardHolder.CIRCUIT_BOARD_CAPABILITY).resolve().orElse(null);
+        BlockEntity host = BoardHostResolver.resolveHost(be);
+        var holder = BoardHostResolver.resolveHolder(be);
         if (!CircuitBoardOverclockHelper.shouldExposeCircuitBoardSlot(be, holder)) {
-            overmek$logger.debug(
-                "OverMek skipped circuit board slot for {}. supported={}, hasBoard={}",
+            OverMekLog.debug(
+                "OverMek skipped circuit board slot for {}. supported={}, hasBoard={}, host={}",
                 be.getClass().getName(),
                 CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(be),
-                holder != null && holder.hasCircuitBoard()
+                holder != null && holder.hasCircuitBoard(),
+                host.getClass().getName()
             );
             return;
         }
 
         if (holder == null) {
-            overmek$logger.debug(
+            OverMekLog.debug(
                 "OverMek could not resolve circuit board capability for {}. registered={}",
                 be.getClass().getName(),
                 CircuitBoardHolder.CIRCUIT_BOARD_CAPABILITY.isRegistered()
@@ -51,24 +51,26 @@ public abstract class MixinMekanismTileContainer extends AbstractContainerMenu {
             return;
         }
 
-        int slotX = CircuitBoardSlotLayoutHelper.getSlotX(be);
-        int slotY = CircuitBoardSlotLayoutHelper.getSlotY(be);
-        CircuitBoardInventorySlot inventorySlot = new CircuitBoardInventorySlot(holder, be, slotX, slotY);
+        BoardSlotDisplayState displayState = CircuitBoardOverclockHelper.getDisplayState((mekanism.common.tile.base.TileEntityMekanism) be, holder.getCircuitBoard());
+        int slotX = displayState.supportProfile().slotAnchor().getSlotX();
+        int slotY = displayState.supportProfile().slotAnchor().getSlotY();
+        CircuitBoardInventorySlot inventorySlot = new CircuitBoardInventorySlot(holder, host, slotX, slotY);
         var containerSlot = inventorySlot.createContainerSlot();
         if (containerSlot == null) {
-            overmek$logger.debug("OverMek failed to create a container slot for {}", be.getClass().getName());
+            OverMekLog.debug("OverMek failed to create a container slot for {}", be.getClass().getName());
             return;
         }
         addSlot(containerSlot);
-        overmek$logger.debug(
-            "OverMek added circuit board slot to container {} for {}. slotIndex={}, totalSlots={}, pos=({}, {}), layout={}",
+        OverMekLog.debug(
+            "OverMek added circuit board slot to container {} for {}. slotIndex={}, totalSlots={}, pos=({}, {}), layout={}, host={}",
             self.getClass().getName(),
             be.getClass().getName(),
             containerSlot.index,
             slots.size(),
             slotX,
             slotY,
-            CircuitBoardSlotLayoutHelper.getLayoutName(be)
+            displayState.supportProfile().slotAnchor().getLayoutName(),
+            host.getClass().getName()
         );
     }
 }

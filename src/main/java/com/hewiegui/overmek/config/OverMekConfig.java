@@ -33,6 +33,10 @@ public final class OverMekConfig {
         return COMMON.warmupEnabled.get();
     }
 
+    public static boolean isDebugLoggingEnabled() {
+        return COMMON.debugLoggingEnabled.get();
+    }
+
     public static double getOverclockEnergyMultiplier() {
         return COMMON.overclockEnergyMultiplier.get();
     }
@@ -159,11 +163,100 @@ public final class OverMekConfig {
         };
     }
 
+    public static double getFissionEfficiencyMultiplier() {
+        return COMMON.fissionEfficiencyMultiplier.get();
+    }
+
+    public static double getFissionStabilityMultiplier() {
+        return COMMON.fissionStabilityMultiplier.get();
+    }
+
+    public static double getFissionBufferMultiplier() {
+        return COMMON.fissionBufferMultiplier.get();
+    }
+
+    public static int getFissionWarmupTicks() {
+        return COMMON.fissionWarmupTicks.get();
+    }
+
+    public static int getFissionWarmupCooldown() {
+        return COMMON.fissionWarmupCooldown.get();
+    }
+
+    public static double getPowerMultiblockGenerationMultiplier() {
+        return COMMON.powerMultiblockGenerationMultiplier.get();
+    }
+
+    public static double getPowerMultiblockFuelMultiplier() {
+        return COMMON.powerMultiblockFuelMultiplier.get();
+    }
+
+    public static double getPowerMultiblockBufferMultiplier() {
+        return COMMON.powerMultiblockBufferMultiplier.get();
+    }
+
+    public static double getMatrixCapacityMultiplier() {
+        return COMMON.matrixCapacityMultiplier.get();
+    }
+
+    public static double getMatrixTransferMultiplier() {
+        return COMMON.matrixTransferMultiplier.get();
+    }
+
+    public static int getPowerMultiblockWarmupTicks() {
+        return COMMON.powerMultiblockWarmupTicks.get();
+    }
+
+    public static int getPowerMultiblockWarmupCooldown() {
+        return COMMON.powerMultiblockWarmupCooldown.get();
+    }
+
+    public static double getEvaporationThroughputMultiplier() {
+        return COMMON.evaporationThroughputMultiplier.get();
+    }
+
+    public static double getEvaporationBufferMultiplier() {
+        return COMMON.evaporationBufferMultiplier.get();
+    }
+
+    public static int getEvaporationWarmupTicks() {
+        return COMMON.evaporationWarmupTicks.get();
+    }
+
+    public static int getEvaporationWarmupCooldown() {
+        return COMMON.evaporationWarmupCooldown.get();
+    }
+
+    public static double getSpsThroughputMultiplier() {
+        return COMMON.spsThroughputMultiplier.get();
+    }
+
+    public static double getSpsStabilityMultiplier() {
+        return COMMON.spsStabilityMultiplier.get();
+    }
+
+    public static double getSpsBufferMultiplier() {
+        return COMMON.spsBufferMultiplier.get();
+    }
+
+    public static double getSpsPressureMultiplier() {
+        return COMMON.spsPressureMultiplier.get();
+    }
+
+    public static int getSpsWarmupTicks() {
+        return COMMON.spsWarmupTicks.get();
+    }
+
+    public static int getSpsWarmupCooldown() {
+        return COMMON.spsWarmupCooldown.get();
+    }
+
     public static final class Common {
 
         final ForgeConfigSpec.BooleanValue overclockEnabled;
         final ForgeConfigSpec.BooleanValue factoryOverclockEnabled;
         final ForgeConfigSpec.BooleanValue warmupEnabled;
+        final ForgeConfigSpec.BooleanValue debugLoggingEnabled;
         final ForgeConfigSpec.IntValue maxOverclockBonus;
         final ForgeConfigSpec.DoubleValue overclockEnergyMultiplier;
         final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedMachineClasses;
@@ -217,6 +310,28 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue advancedGeneratorEnergyCapacityFactor;
         final ForgeConfigSpec.DoubleValue eliteGeneratorEnergyCapacityFactor;
         final ForgeConfigSpec.DoubleValue ultimateGeneratorEnergyCapacityFactor;
+        final ForgeConfigSpec.DoubleValue fissionEfficiencyMultiplier;
+        final ForgeConfigSpec.DoubleValue fissionStabilityMultiplier;
+        final ForgeConfigSpec.DoubleValue fissionBufferMultiplier;
+        final ForgeConfigSpec.IntValue fissionWarmupTicks;
+        final ForgeConfigSpec.IntValue fissionWarmupCooldown;
+        final ForgeConfigSpec.DoubleValue powerMultiblockGenerationMultiplier;
+        final ForgeConfigSpec.DoubleValue powerMultiblockFuelMultiplier;
+        final ForgeConfigSpec.DoubleValue powerMultiblockBufferMultiplier;
+        final ForgeConfigSpec.DoubleValue matrixCapacityMultiplier;
+        final ForgeConfigSpec.DoubleValue matrixTransferMultiplier;
+        final ForgeConfigSpec.IntValue powerMultiblockWarmupTicks;
+        final ForgeConfigSpec.IntValue powerMultiblockWarmupCooldown;
+        final ForgeConfigSpec.DoubleValue evaporationThroughputMultiplier;
+        final ForgeConfigSpec.DoubleValue evaporationBufferMultiplier;
+        final ForgeConfigSpec.IntValue evaporationWarmupTicks;
+        final ForgeConfigSpec.IntValue evaporationWarmupCooldown;
+        final ForgeConfigSpec.DoubleValue spsThroughputMultiplier;
+        final ForgeConfigSpec.DoubleValue spsStabilityMultiplier;
+        final ForgeConfigSpec.DoubleValue spsBufferMultiplier;
+        final ForgeConfigSpec.DoubleValue spsPressureMultiplier;
+        final ForgeConfigSpec.IntValue spsWarmupTicks;
+        final ForgeConfigSpec.IntValue spsWarmupCooldown;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("overclock");
@@ -232,6 +347,10 @@ public final class OverMekConfig {
             warmupEnabled = builder
                 .comment("Whether circuit boards need to warm up under sustained operation before reaching full speed.")
                 .define("warmupEnabled", true);
+
+            debugLoggingEnabled = builder
+                .comment("Whether verbose OverMek debug logging should be emitted to the console.")
+                .define("debugLoggingEnabled", false);
 
             maxOverclockBonus = builder
                 .comment("Caps the effective overclock bonus before it is converted into faster processing.")
@@ -436,6 +555,44 @@ public final class OverMekConfig {
             ultimateGeneratorFuelConsumptionMultiplier = builder.defineInRange("fuelConsumptionMultiplier", 4.1D, 1.0D, 64.0D);
             ultimateGeneratorStartupWarmupTicks = builder.defineInRange("startupWarmupTicks", 280, 0, 24_000);
             ultimateGeneratorEnergyCapacityFactor = builder.defineInRange("energyCapacityFactor", 4.25D, 1.0D, 64.0D);
+            builder.pop();
+
+            builder.pop();
+
+            builder.push("multiblock");
+
+            builder.push("fission");
+            fissionEfficiencyMultiplier = builder.defineInRange("efficiencyMultiplier", 2.2D, 1.0D, 64.0D);
+            fissionStabilityMultiplier = builder.defineInRange("stabilityMultiplier", 2.7D, 1.0D, 64.0D);
+            fissionBufferMultiplier = builder.defineInRange("bufferMultiplier", 3.8D, 1.0D, 64.0D);
+            fissionWarmupTicks = builder.defineInRange("warmupTicks", 260, 0, 24_000);
+            fissionWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
+            builder.pop();
+
+            builder.push("power");
+            powerMultiblockGenerationMultiplier = builder.defineInRange("generationMultiplier", 3.0D, 1.0D, 64.0D);
+            powerMultiblockFuelMultiplier = builder.defineInRange("fuelMultiplier", 3.6D, 1.0D, 64.0D);
+            powerMultiblockBufferMultiplier = builder.defineInRange("bufferMultiplier", 4.2D, 1.0D, 64.0D);
+            matrixCapacityMultiplier = builder.defineInRange("matrixCapacityMultiplier", 5.8D, 1.0D, 64.0D);
+            matrixTransferMultiplier = builder.defineInRange("matrixTransferMultiplier", 4.2D, 1.0D, 64.0D);
+            powerMultiblockWarmupTicks = builder.defineInRange("warmupTicks", 220, 0, 24_000);
+            powerMultiblockWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
+            builder.pop();
+
+            builder.push("evaporation");
+            evaporationThroughputMultiplier = builder.defineInRange("throughputMultiplier", 3.8D, 1.0D, 64.0D);
+            evaporationBufferMultiplier = builder.defineInRange("bufferMultiplier", 3.2D, 1.0D, 64.0D);
+            evaporationWarmupTicks = builder.defineInRange("warmupTicks", 180, 0, 24_000);
+            evaporationWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
+            builder.pop();
+
+            builder.push("sps");
+            spsThroughputMultiplier = builder.defineInRange("throughputMultiplier", 3.4D, 1.0D, 64.0D);
+            spsStabilityMultiplier = builder.defineInRange("stabilityMultiplier", 2.2D, 1.0D, 64.0D);
+            spsBufferMultiplier = builder.defineInRange("bufferMultiplier", 3.6D, 1.0D, 64.0D);
+            spsPressureMultiplier = builder.defineInRange("pressureMultiplier", 2.9D, 1.0D, 64.0D);
+            spsWarmupTicks = builder.defineInRange("warmupTicks", 320, 0, 24_000);
+            spsWarmupCooldown = builder.defineInRange("warmupCooldown", 1, 1, 1_000);
             builder.pop();
 
             builder.pop();

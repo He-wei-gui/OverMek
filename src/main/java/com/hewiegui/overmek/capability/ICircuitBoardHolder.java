@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.capability;
 
 import com.hewiegui.overmek.item.CircuitBoardItem;
+import com.hewiegui.overmek.util.CircuitBoardChannel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
@@ -38,6 +39,14 @@ public interface ICircuitBoardHolder {
             return -1;
         }
         return ((CircuitBoardItem) stack.getItem()).getTier();
+    }
+
+    default CircuitBoardChannel getBoardChannel() {
+        ItemStack stack = getCircuitBoard();
+        if (stack.isEmpty() || !(stack.getItem() instanceof CircuitBoardItem)) {
+            return null;
+        }
+        return ((CircuitBoardItem) stack.getItem()).getChannel();
     }
 
     default double getWarmupRatio(int maxWarmupProgress) {

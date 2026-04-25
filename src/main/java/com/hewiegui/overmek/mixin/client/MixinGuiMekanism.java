@@ -1,8 +1,8 @@
 package com.hewiegui.overmek.mixin.client;
 
 import com.hewiegui.overmek.inventory.CircuitBoardContainerSlot;
+import com.hewiegui.overmek.util.BoardSlotDisplayState;
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
-import com.hewiegui.overmek.util.CircuitBoardSlotLayoutHelper;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.VirtualSlotContainerScreen;
@@ -36,11 +36,9 @@ public abstract class MixinGuiMekanism<CONTAINER extends AbstractContainerMenu> 
             if (!(slot instanceof CircuitBoardContainerSlot)) {
                 continue;
             }
-            ItemStack stack = slot.getItem();
-            double warmupRatio = stack.isEmpty() || !CircuitBoardOverclockHelper.canApplyCircuitBoardEffects(tile)
-                ? 0.0D
-                : CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack);
-            int barX = CircuitBoardSlotLayoutHelper.usesLeftExternalLayout(tile) ? slot.x - 4 : slot.x + 18;
+            BoardSlotDisplayState displayState = CircuitBoardOverclockHelper.getDisplayState(tile, slot.getItem());
+            double warmupRatio = displayState.showWarmupBar() ? displayState.warmupRatio() : 0.0D;
+            int barX = displayState.supportProfile().slotAnchor().getWarmupBarX(slot.x);
             int barY = slot.y;
             int barHeight = 16;
             int filledHeight = Mth.clamp((int) Math.round(warmupRatio * barHeight), 0, barHeight);

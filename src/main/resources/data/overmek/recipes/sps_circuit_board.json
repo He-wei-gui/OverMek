@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LPL",
+    "CBC",
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "item": "mekanism:laser"
+    },
+    "P": {
+      "item": "mekanism:polonium_pellet"
+    },
+    "C": {
+      "item": "mekanism:ultimate_control_circuit"
+    },
+    "B": {
+      "item": "overmek:power_multiblock_circuit_board"
+    },
+    "S": {
+      "item": "mekanism:sps_casing"
+    }
+  },
+  "result": {
+    "item": "overmek:sps_circuit_board",
+    "count": 1
+  }
+}
