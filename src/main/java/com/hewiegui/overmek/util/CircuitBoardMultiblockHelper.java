@@ -78,6 +78,10 @@ public final class CircuitBoardMultiblockHelper {
         return MultiblockBoardService.getDisplayedEvaporationThroughputMultiplier(tile, stack);
     }
 
+    public static double getEffectiveEvaporationThroughputMultiplier(TileEntityMekanism tile) {
+        return MultiblockBoardService.getEffectiveEvaporationThroughputMultiplier(tile);
+    }
+
     public static int getExtraEvaporationPasses(TileEntityMekanism tile) {
         return MultiblockBoardService.getExtraEvaporationPasses(tile);
     }
@@ -144,6 +148,10 @@ public final class CircuitBoardMultiblockHelper {
 
     public static double getEffectiveBufferMultiplier(TileEntityMekanism tile) {
         return MultiblockBoardService.getEffectiveBufferMultiplier(tile);
+    }
+
+    public static double getEffectiveHeatDissipationFactor(TileEntityMekanism tile) {
+        return MultiblockBoardService.getEffectiveHeatDissipationFactor(tile);
     }
 
     public static double getWarmupRatio(@Nullable ICircuitBoardMultiblockData data) {

@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -44,6 +45,25 @@ public abstract class MixinEvaporationMultiblockData implements ICircuitBoardMul
             recipeCacheLookupMonitor.updateAndProcess();
         }
         CircuitBoardOverclockHelper.tickWarmup(overmek$ownerTile, lastGain > 0);
+
+        double throughputMultiplier = CircuitBoardMultiblockHelper.getEffectiveEvaporationThroughputMultiplier(overmek$ownerTile);
+        if (throughputMultiplier > 1.0D && lastGain > 0) {
+            lastGain *= throughputMultiplier;
+        }
+    }
+
+    @Redirect(
+        method = "simulateEnvironment",
+        at = @At(
+            value = "INVOKE",
+            target = "Lmekanism/common/config/CachedDoubleValue;get()D"
+        )
+    )
+    private double overmek$reduceHeatDissipation(mekanism.common.config.value.CachedDoubleValue instance) {
+        if (overmek$ownerTile == null) {
+            return instance.get();
+        }
+        return instance.get() * CircuitBoardMultiblockHelper.getEffectiveHeatDissipationFactor(overmek$ownerTile);
     }
 
     @Inject(method = "getMaxFluid", at = @At("RETURN"), cancellable = true)

@@ -227,6 +227,10 @@ public final class OverMekConfig {
         return COMMON.evaporationWarmupCooldown.get();
     }
 
+    public static double getEvaporationHeatDissipationFactor() {
+        return COMMON.evaporationHeatDissipationFactor.get();
+    }
+
     public static double getSpsThroughputMultiplier() {
         return COMMON.spsThroughputMultiplier.get();
     }
@@ -330,6 +334,7 @@ public final class OverMekConfig {
         final ForgeConfigSpec.DoubleValue evaporationBufferMultiplier;
         final ForgeConfigSpec.IntValue evaporationWarmupTicks;
         final ForgeConfigSpec.IntValue evaporationWarmupCooldown;
+        final ForgeConfigSpec.DoubleValue evaporationHeatDissipationFactor;
         final ForgeConfigSpec.DoubleValue spsThroughputMultiplier;
         final ForgeConfigSpec.DoubleValue spsStabilityMultiplier;
         final ForgeConfigSpec.DoubleValue spsBufferMultiplier;
@@ -585,10 +590,13 @@ public final class OverMekConfig {
             builder.pop();
 
             builder.push("evaporation");
-            evaporationThroughputMultiplier = builder.defineInRange("throughputMultiplier", 3.8D, 1.0D, 64.0D);
-            evaporationBufferMultiplier = builder.defineInRange("bufferMultiplier", 3.2D, 1.0D, 64.0D);
-            evaporationWarmupTicks = builder.defineInRange("warmupTicks", 180, 0, 24_000);
-            evaporationWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
+            evaporationThroughputMultiplier = builder.defineInRange("throughputMultiplier", 5.0D, 1.0D, 64.0D);
+            evaporationBufferMultiplier = builder.defineInRange("bufferMultiplier", 1.0D, 1.0D, 64.0D);
+            evaporationWarmupTicks = builder.defineInRange("warmupTicks", 1200, 0, 24_000);
+            evaporationWarmupCooldown = builder.defineInRange("warmupCooldown", 1, 1, 1_000);
+            evaporationHeatDissipationFactor = builder
+                .comment("Multiplier applied to Thermal Evaporation Tower heat dissipation when a circuit board is installed. 1.0 = vanilla rate, 0.25 = 75% reduction.")
+                .defineInRange("heatDissipationFactor", 0.25D, 0.01D, 1.0D);
             builder.pop();
 
             builder.push("sps");

@@ -1,5 +1,6 @@
 package com.hewiegui.overmek.util;
 
+import com.hewiegui.overmek.config.OverMekConfig;
 import mekanism.common.tile.base.TileEntityMekanism;
 import net.minecraft.world.item.ItemStack;
 
@@ -60,6 +61,16 @@ public final class MultiblockBoardService {
     public static int getExtraEvaporationPasses(TileEntityMekanism tile) {
         BoardEffectProfile profile = getInstalledProfile(tile);
         return profile.isSupported() ? Math.max(0, (int) Math.round(profile.scaleMultiplier(profile.throughputMultiplier(), CircuitBoardOverclockHelper.getWarmupRatio(tile)) - 1.0D)) : 0;
+    }
+
+    public static double getEffectiveEvaporationThroughputMultiplier(TileEntityMekanism tile) {
+        BoardEffectProfile profile = getInstalledProfile(tile);
+        return profile.isSupported() ? profile.scaleMultiplier(profile.throughputMultiplier(), CircuitBoardOverclockHelper.getWarmupRatio(tile)) : 1.0D;
+    }
+
+    public static double getEffectiveHeatDissipationFactor(TileEntityMekanism tile) {
+        BoardEffectProfile profile = getInstalledProfile(tile);
+        return profile.isSupported() ? OverMekConfig.getEvaporationHeatDissipationFactor() : 1.0D;
     }
 
     public static double getDisplayedMatrixCapacityMultiplier(TileEntityMekanism tile, ItemStack stack) {
