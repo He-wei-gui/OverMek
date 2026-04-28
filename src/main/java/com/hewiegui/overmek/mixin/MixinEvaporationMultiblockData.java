@@ -40,12 +40,17 @@ public abstract class MixinEvaporationMultiblockData implements ICircuitBoardMul
         if (overmek$ownerTile == null) {
             return;
         }
+        CircuitBoardOverclockHelper.tickWarmup(overmek$ownerTile, lastGain > 0);
+
         int extraPasses = CircuitBoardMultiblockHelper.getExtraEvaporationPasses(overmek$ownerTile);
         for (int i = 0; i < extraPasses; i++) {
             recipeCacheLookupMonitor.updateAndProcess();
+            // 在每次额外处理后应用产量加成
+            if (lastGain > 0) {
+                lastGain *= CircuitBoardMultiblockHelper.getEffectiveEvaporationThroughputMultiplier(overmek$ownerTile);
+            }
         }
-        CircuitBoardOverclockHelper.tickWarmup(overmek$ownerTile, lastGain > 0);
-
+        // 基础处理的产量加成
         double throughputMultiplier = CircuitBoardMultiblockHelper.getEffectiveEvaporationThroughputMultiplier(overmek$ownerTile);
         if (throughputMultiplier > 1.0D && lastGain > 0) {
             lastGain *= throughputMultiplier;
