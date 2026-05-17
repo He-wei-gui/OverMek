@@ -1,5 +1,6 @@
 package com.hewiegui.overmek.mixin;
 
+import com.hewiegui.overmek.util.BoardHostResolver;
 import com.hewiegui.overmek.util.CircuitBoardMultiblockHelper;
 import com.hewiegui.overmek.util.ICircuitBoardMultiblockData;
 import mekanism.api.Action;
@@ -16,6 +17,7 @@ import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.tile.fission.TileEntityFissionReactorCasing;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,6 +47,22 @@ public abstract class MixinFissionReactorMultiblockData implements ICircuitBoard
         overmek$ownerTile = tile;
     }
 
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void overmek$resyncOwner(Level world, CallbackInfoReturnable<Boolean> cir) {
+        var multiblock = (MultiblockData) (Object) this;
+        if (multiblock.locations == null || multiblock.locations.isEmpty()) {
+            return;
+        }
+        if (overmek$ownerTile == null) {
+            return;
+        }
+        BlockEntity currentHost = BoardHostResolver.resolveHost(overmek$ownerTile);
+        if (currentHost != overmek$ownerTile && currentHost instanceof TileEntityMekanism mekHost) {
+            overmek$ownerTile = mekHost;
+        }
+        BoardHostResolver.resolveHolder(overmek$ownerTile);
+    }
+
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lmekanism/generators/common/content/fission/FissionReactorMultiblockData;handleCoolant()V", shift = At.Shift.AFTER))
     private void overmek$enhanceFissionCooling(Level world, CallbackInfoReturnable<Boolean> cir) {
         if (overmek$ownerTile == null) {
@@ -54,16 +72,15 @@ public abstract class MixinFissionReactorMultiblockData implements ICircuitBoard
         boolean active = isActive() && lastBurnRate > 0;
         com.hewiegui.overmek.util.CircuitBoardOverclockHelper.tickWarmup(overmek$ownerTile, active);
         overmek$updateHeatCapacity();
-        if (!active) {
-            return;
-        }
 
         if (reactorDamage > 0) {
             double stability = CircuitBoardMultiblockHelper.getEffectiveFissionStabilityMultiplier(overmek$ownerTile);
-            reactorDamage = Math.max(0.0D, reactorDamage - 0.0004D * (stability - 1.0D));
+            if (stability > 1.0D) {
+                reactorDamage = Math.max(0.0D, reactorDamage - 0.0004D * (stability - 1.0D));
+            }
         }
 
-        if (lastBoilRate <= 0) {
+        if (!active || lastBoilRate <= 0) {
             return;
         }
 
@@ -80,23 +97,61 @@ public abstract class MixinFissionReactorMultiblockData implements ICircuitBoard
         }
     }
 
+    @Inject(method = "getActualBurnRate", at = @At("RETURN"), cancellable = true)
+    private void overmek$boostDisplayedBurnRate(CallbackInfoReturnable<Double> cir) {
+        if (overmek$ownerTile == null) {
+            return;
+        }
+        double efficiency = CircuitBoardMultiblockHelper.getEffectiveFissionEfficiencyMultiplier(overmek$ownerTile);
+        if (efficiency > 1.0D) {
+            cir.setReturnValue(cir.getReturnValueD() * efficiency);
+        }
+    }
+
+    @Inject(method = "getHeatingRate", at = @At("RETURN"), cancellable = true)
+    private void overmek$boostDisplayedHeatingRate(CallbackInfoReturnable<Long> cir) {
+        if (overmek$ownerTile == null) {
+            return;
+        }
+        double efficiency = CircuitBoardMultiblockHelper.getEffectiveFissionEfficiencyMultiplier(overmek$ownerTile);
+        if (efficiency > 1.0D) {
+            cir.setReturnValue(Math.round(cir.getReturnValueJ() * efficiency));
+        }
+    }
+
     @Inject(method = "getCoolantCapacity", at = @At("RETURN"), cancellable = true)
     private void overmek$expandFissionCoolantCapacity(CallbackInfoReturnable<Long> cir) {
         if (overmek$ownerTile == null) {
             return;
         }
         double bufferMultiplier = CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile);
-        cir.setReturnValue(Math.max(cir.getReturnValueJ(), Math.round(cir.getReturnValueJ() * bufferMultiplier)));
+        long base = cir.getReturnValueJ();
+        long scaled = Math.round(base * bufferMultiplier);
+        long stored = 0L;
+        if (gasCoolantTank != null && !gasCoolantTank.isEmpty()) {
+            stored = gasCoolantTank.getStored();
+        } else if (fluidCoolantTank != null && !fluidCoolantTank.isEmpty()) {
+            stored = fluidCoolantTank.getFluidAmount();
+        }
+        cir.setReturnValue(Math.max(stored, Math.max(base, scaled)));
     }
 
     private void overmek$updateHeatCapacity() {
-        if (overmek$ownerTile == null) {
+        if (overmek$ownerTile == null || heatCapacitor == null) {
             return;
         }
         double stability = CircuitBoardMultiblockHelper.getEffectiveFissionStabilityMultiplier(overmek$ownerTile);
         double baseHeatCapacity = MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get()
             * ((MultiblockData) (Object) this).locations.size();
-        heatCapacitor.setHeatCapacity(baseHeatCapacity * stability, true);
+        double targetCapacity = baseHeatCapacity * stability;
+        double current = heatCapacitor.getHeatCapacity();
+        if (Math.abs(current - targetCapacity) < 1.0E-6D) {
+            return;
+        }
+        double currentHeat = heatCapacitor.getHeat();
+        double scaledHeat = current > 0 ? currentHeat * (targetCapacity / current) : currentHeat;
+        heatCapacitor.setHeatCapacity(targetCapacity, false);
+        heatCapacitor.setHeat(scaledHeat);
     }
 
     private long overmek$insertExtraHeatedCoolant(long requestedExtraBoil) {

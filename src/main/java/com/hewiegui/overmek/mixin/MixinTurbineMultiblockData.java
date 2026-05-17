@@ -88,17 +88,28 @@ public abstract class MixinTurbineMultiblockData implements ICircuitBoardMultibl
     @Inject(method = "getEnergyCapacity", at = @At("RETURN"), cancellable = true)
     private void overmek$expandTurbineEnergyBuffer(CallbackInfoReturnable<FloatingLong> cir) {
         int tier = overmek$ownerTile == null ? -1 : com.hewiegui.overmek.util.CircuitBoardOverclockHelper.getInstalledTier(overmek$ownerTile);
-        if (tier >= 0) {
-            cir.setReturnValue(cir.getReturnValue().multiply(CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile)));
+        if (tier < 0) {
+            return;
         }
+        FloatingLong base = cir.getReturnValue();
+        FloatingLong scaled = base.multiply(CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile));
+        FloatingLong stored = energyContainer == null ? null : energyContainer.getEnergy();
+        if (stored != null && stored.greaterThan(scaled)) {
+            scaled = stored;
+        }
+        cir.setReturnValue(scaled);
     }
 
     @Inject(method = "getSteamCapacity", at = @At("RETURN"), cancellable = true)
     private void overmek$expandTurbineSteamBuffer(CallbackInfoReturnable<Long> cir) {
         int tier = overmek$ownerTile == null ? -1 : com.hewiegui.overmek.util.CircuitBoardOverclockHelper.getInstalledTier(overmek$ownerTile);
-        if (tier >= 0) {
-            cir.setReturnValue(Math.max(cir.getReturnValueJ(), Math.round(cir.getReturnValueJ() * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile))));
+        if (tier < 0) {
+            return;
         }
+        long base = cir.getReturnValueJ();
+        long scaled = Math.round(base * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile));
+        long stored = gasTank == null ? 0L : gasTank.getStored();
+        cir.setReturnValue(Math.max(stored, Math.max(base, scaled)));
     }
 
     @Override

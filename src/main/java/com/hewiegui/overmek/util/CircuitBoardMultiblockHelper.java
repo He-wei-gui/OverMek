@@ -2,11 +2,8 @@ package com.hewiegui.overmek.util;
 
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.multiblock.TileEntityInductionCasing;
-import mekanism.common.tile.multiblock.TileEntitySPSCasing;
-import mekanism.common.tile.multiblock.TileEntityThermalEvaporationBlock;
-import mekanism.generators.common.tile.fission.TileEntityFissionReactorCasing;
-import mekanism.generators.common.tile.fusion.TileEntityFusionReactorBlock;
-import mekanism.generators.common.tile.turbine.TileEntityTurbineCasing;
+import mekanism.common.tile.multiblock.TileEntityInductionCell;
+import mekanism.common.tile.multiblock.TileEntityInductionProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -21,25 +18,25 @@ public final class CircuitBoardMultiblockHelper {
     }
 
     public static boolean isPowerMultiblock(BlockEntity blockEntity) {
-        return blockEntity instanceof TileEntityFusionReactorBlock
-            || blockEntity instanceof TileEntityTurbineCasing
-            || blockEntity instanceof TileEntityInductionCasing;
+        return CircuitBoardProfileHelper.getMachineProfile(blockEntity) == CircuitBoardMachineProfile.POWER_MULTIBLOCK;
     }
 
     public static boolean isInductionMatrix(BlockEntity blockEntity) {
-        return blockEntity instanceof TileEntityInductionCasing;
+        return blockEntity instanceof TileEntityInductionCasing
+            || blockEntity instanceof TileEntityInductionCell
+            || blockEntity instanceof TileEntityInductionProvider;
     }
 
     public static boolean isSps(BlockEntity blockEntity) {
-        return blockEntity instanceof TileEntitySPSCasing;
+        return CircuitBoardProfileHelper.getMachineProfile(blockEntity) == CircuitBoardMachineProfile.SPS_MULTIBLOCK;
     }
 
     public static boolean isFissionReactor(BlockEntity blockEntity) {
-        return blockEntity instanceof TileEntityFissionReactorCasing;
+        return CircuitBoardProfileHelper.getMachineProfile(blockEntity) == CircuitBoardMachineProfile.FISSION;
     }
 
     public static boolean isEvaporationTower(BlockEntity blockEntity) {
-        return blockEntity instanceof TileEntityThermalEvaporationBlock;
+        return CircuitBoardProfileHelper.getMachineProfile(blockEntity) == CircuitBoardMachineProfile.EVAPORATION_MULTIBLOCK;
     }
 
     public static double getDisplayedFissionEfficiencyMultiplier(TileEntityMekanism tile, ItemStack stack) {

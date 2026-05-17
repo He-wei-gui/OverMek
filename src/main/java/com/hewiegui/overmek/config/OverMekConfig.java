@@ -600,11 +600,11 @@ public final class OverMekConfig {
             builder.pop();
 
             builder.push("sps");
-            spsThroughputMultiplier = builder.defineInRange("throughputMultiplier", 4.6D, 1.0D, 64.0D);
+            spsThroughputMultiplier = builder.defineInRange("throughputMultiplier", 6.0D, 1.0D, 64.0D);
             spsStabilityMultiplier = builder.defineInRange("stabilityMultiplier", 2.8D, 1.0D, 64.0D);
             spsBufferMultiplier = builder.defineInRange("bufferMultiplier", 4.8D, 1.0D, 64.0D);
-            spsPressureMultiplier = builder.defineInRange("pressureMultiplier", 4.2D, 1.0D, 64.0D);
-            spsEnergyUsageMultiplier = builder.defineInRange("energyUsageMultiplier", 0.68D, 0.05D, 64.0D);
+            spsPressureMultiplier = builder.defineInRange("pressureMultiplier", 3.0D, 1.0D, 64.0D);
+            spsEnergyUsageMultiplier = builder.defineInRange("energyUsageMultiplier", 0.95D, 0.05D, 64.0D);
             spsWarmupTicks = builder.defineInRange("warmupTicks", 3200, 0, 24_000);
             spsWarmupCooldown = builder.defineInRange("warmupCooldown", 2, 1, 1_000);
             builder.pop();

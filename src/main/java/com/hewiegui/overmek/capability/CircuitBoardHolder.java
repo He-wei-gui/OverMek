@@ -1,5 +1,12 @@
 package com.hewiegui.overmek.capability;
 
+import com.hewiegui.overmek.util.MultiblockBoardService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+import mekanism.common.tile.base.TileEntityMekanism;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +23,7 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
 
     public static final Capability<ICircuitBoardHolder> CIRCUIT_BOARD_CAPABILITY =
         CapabilityManager.get(new CapabilityToken<>() {});
+    private static final Set<CircuitBoardHolder> TRACKED_HOLDERS = Collections.newSetFromMap(new WeakHashMap<>());
 
     private ItemStack circuitBoard = ItemStack.EMPTY;
     private int warmupProgress;
@@ -25,6 +33,19 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
 
     public CircuitBoardHolder(BlockEntity blockEntity) {
         this.blockEntity = blockEntity;
+        synchronized (TRACKED_HOLDERS) {
+            TRACKED_HOLDERS.add(this);
+        }
+    }
+
+    public static Collection<CircuitBoardHolder> getTrackedHoldersSnapshot() {
+        synchronized (TRACKED_HOLDERS) {
+            return new ArrayList<>(TRACKED_HOLDERS);
+        }
+    }
+
+    public BlockEntity getBlockEntity() {
+        return blockEntity;
     }
 
     @Override
@@ -39,6 +60,9 @@ public class CircuitBoardHolder implements ICircuitBoardHolder, ICapabilitySeria
         if (changedBoard) {
             warmupProgress = 0;
             generatorFuelRemainder = 0.0D;
+            if (blockEntity instanceof TileEntityMekanism tile) {
+                MultiblockBoardService.invalidateProfileCache(tile);
+            }
         }
         if (blockEntity != null) {
             blockEntity.setChanged();

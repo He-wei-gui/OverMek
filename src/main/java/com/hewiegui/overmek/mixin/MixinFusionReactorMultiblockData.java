@@ -67,17 +67,24 @@ public abstract class MixinFusionReactorMultiblockData implements ICircuitBoardM
     @Inject(method = "getMaxWater", at = @At("RETURN"), cancellable = true)
     private void overmek$expandFusionWaterBuffer(CallbackInfoReturnable<Integer> cir) {
         int tier = overmek$ownerTile == null ? -1 : com.hewiegui.overmek.util.CircuitBoardOverclockHelper.getInstalledTier(overmek$ownerTile);
-        if (tier >= 0) {
-            cir.setReturnValue((int) Math.max(cir.getReturnValueI(), Math.round(cir.getReturnValueI() * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile))));
+        if (tier < 0) {
+            return;
         }
+        int base = cir.getReturnValueI();
+        long scaled = Math.round((long) base * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile));
+        long finalValue = Math.max(base, scaled);
+        cir.setReturnValue((int) Math.min(Integer.MAX_VALUE, finalValue));
     }
 
     @Inject(method = "getMaxSteam", at = @At("RETURN"), cancellable = true)
     private void overmek$expandFusionSteamBuffer(CallbackInfoReturnable<Long> cir) {
         int tier = overmek$ownerTile == null ? -1 : com.hewiegui.overmek.util.CircuitBoardOverclockHelper.getInstalledTier(overmek$ownerTile);
-        if (tier >= 0) {
-            cir.setReturnValue(Math.max(cir.getReturnValueJ(), Math.round(cir.getReturnValueJ() * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile))));
+        if (tier < 0) {
+            return;
         }
+        long base = cir.getReturnValueJ();
+        long scaled = Math.round(base * CircuitBoardMultiblockHelper.getEffectiveBufferMultiplier(overmek$ownerTile));
+        cir.setReturnValue(Math.max(base, scaled));
     }
 
     @Override

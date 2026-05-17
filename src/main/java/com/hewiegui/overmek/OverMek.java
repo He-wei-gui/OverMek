@@ -4,7 +4,6 @@ import com.hewiegui.overmek.config.OverMekConfig;
 import com.hewiegui.overmek.registry.ModCreativeTabs;
 import com.hewiegui.overmek.registry.ModItems;
 import com.hewiegui.overmek.util.BoardProfileLoader;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -17,7 +16,7 @@ public class OverMek {
 
     public OverMek(FMLJavaModLoadingContext context) {
         var bus = context.getModEventBus();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, OverMekConfig.SPEC, "overmek-common.toml");
+        context.registerConfig(ModConfig.Type.COMMON, OverMekConfig.SPEC, "overmek-common.toml");
         bus.addListener(this::onConfigLoaded);
         bus.addListener(this::onConfigReloaded);
         ModItems.ITEMS.register(bus);

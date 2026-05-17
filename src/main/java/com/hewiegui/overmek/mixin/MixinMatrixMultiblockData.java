@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.mixin;
 
 import com.hewiegui.overmek.util.BoardHostResolver;
+import com.hewiegui.overmek.util.CircuitBoardMultiblockHelper;
 import com.hewiegui.overmek.util.CircuitBoardOverclockHelper;
 import com.hewiegui.overmek.util.ICircuitBoardMultiblockData;
 import mekanism.api.math.FloatingLong;
@@ -54,6 +55,28 @@ public abstract class MixinMatrixMultiblockData implements ICircuitBoardMultiblo
         }
         boolean active = !getLastInput().isZero() || !getLastOutput().isZero();
         CircuitBoardOverclockHelper.tickWarmup(overmek$ownerTile, active);
+    }
+
+    @Inject(method = "getLastInput", at = @At("RETURN"), cancellable = true)
+    private void overmek$boostDisplayedInput(CallbackInfoReturnable<FloatingLong> cir) {
+        if (overmek$ownerTile == null) {
+            return;
+        }
+        double multiplier = CircuitBoardMultiblockHelper.getEffectiveMatrixTransferMultiplier(overmek$ownerTile);
+        if (multiplier > 1.0D) {
+            cir.setReturnValue(cir.getReturnValue().multiply(multiplier));
+        }
+    }
+
+    @Inject(method = "getLastOutput", at = @At("RETURN"), cancellable = true)
+    private void overmek$boostDisplayedOutput(CallbackInfoReturnable<FloatingLong> cir) {
+        if (overmek$ownerTile == null) {
+            return;
+        }
+        double multiplier = CircuitBoardMultiblockHelper.getEffectiveMatrixTransferMultiplier(overmek$ownerTile);
+        if (multiplier > 1.0D) {
+            cir.setReturnValue(cir.getReturnValue().multiply(multiplier));
+        }
     }
 
     @Override

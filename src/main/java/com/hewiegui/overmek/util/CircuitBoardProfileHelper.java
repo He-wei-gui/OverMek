@@ -6,12 +6,23 @@ import java.util.regex.Pattern;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.factory.TileEntityFactory;
 import mekanism.common.tile.multiblock.TileEntityInductionCasing;
+import mekanism.common.tile.multiblock.TileEntityInductionCell;
+import mekanism.common.tile.multiblock.TileEntityInductionProvider;
 import mekanism.common.tile.multiblock.TileEntitySPSCasing;
+import mekanism.common.tile.multiblock.TileEntitySuperchargedCoil;
 import mekanism.common.tile.multiblock.TileEntityThermalEvaporationBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.tile.prefab.TileEntityStructuralMultiblock;
+import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
+import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
+import mekanism.generators.common.tile.fission.TileEntityFissionAssembly;
 import mekanism.generators.common.tile.fission.TileEntityFissionReactorCasing;
 import mekanism.generators.common.tile.fusion.TileEntityFusionReactorBlock;
+import mekanism.generators.common.tile.turbine.TileEntityElectromagneticCoil;
+import mekanism.generators.common.tile.turbine.TileEntityRotationalComplex;
+import mekanism.generators.common.tile.turbine.TileEntitySaturatingCondenser;
 import mekanism.generators.common.tile.turbine.TileEntityTurbineCasing;
+import mekanism.generators.common.tile.turbine.TileEntityTurbineRotor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -29,15 +40,26 @@ public final class CircuitBoardProfileHelper {
             return MachineSupportProfile.unsupported();
         }
         CircuitBoardMachineProfile machineProfile;
-        if (blockEntity instanceof TileEntityFissionReactorCasing) {
+        CircuitBoardMachineProfile structuralProfile = getStructuralMachineProfile(blockEntity);
+        if (structuralProfile.isSupported()) {
+            machineProfile = structuralProfile;
+        } else if (blockEntity instanceof TileEntityFissionReactorCasing
+            || blockEntity instanceof TileEntityFissionAssembly) {
             machineProfile = CircuitBoardMachineProfile.FISSION;
         } else if (blockEntity instanceof TileEntityFusionReactorBlock
             || blockEntity instanceof TileEntityTurbineCasing
-            || blockEntity instanceof TileEntityInductionCasing) {
+            || blockEntity instanceof TileEntityTurbineRotor
+            || blockEntity instanceof TileEntityElectromagneticCoil
+            || blockEntity instanceof TileEntityRotationalComplex
+            || blockEntity instanceof TileEntitySaturatingCondenser
+            || blockEntity instanceof TileEntityInductionCasing
+            || blockEntity instanceof TileEntityInductionCell
+            || blockEntity instanceof TileEntityInductionProvider) {
             machineProfile = CircuitBoardMachineProfile.POWER_MULTIBLOCK;
         } else if (blockEntity instanceof TileEntityThermalEvaporationBlock) {
             machineProfile = CircuitBoardMachineProfile.EVAPORATION_MULTIBLOCK;
-        } else if (blockEntity instanceof TileEntitySPSCasing) {
+        } else if (blockEntity instanceof TileEntitySPSCasing
+            || blockEntity instanceof TileEntitySuperchargedCoil) {
             machineProfile = CircuitBoardMachineProfile.SPS_MULTIBLOCK;
         } else if (GeneratorBoardService.isSupportedGenerator(tile)) {
             machineProfile = CircuitBoardMachineProfile.GENERATOR;
@@ -126,5 +148,24 @@ public final class CircuitBoardProfileHelper {
             case SPS_MULTIBLOCK -> BoardTooltipCategory.SPS_MULTIBLOCK;
             case UNSUPPORTED -> BoardTooltipCategory.UNSUPPORTED;
         };
+    }
+
+    private static CircuitBoardMachineProfile getStructuralMachineProfile(BlockEntity blockEntity) {
+        if (!(blockEntity instanceof TileEntityStructuralMultiblock structuralMultiblock)) {
+            return CircuitBoardMachineProfile.UNSUPPORTED;
+        }
+        for (var structure : structuralMultiblock.getStructureMap().values()) {
+            if (structure == null || !structure.isValid()) {
+                continue;
+            }
+            var data = structure.getMultiblockData();
+            if (data instanceof FissionReactorMultiblockData) {
+                return CircuitBoardMachineProfile.FISSION;
+            }
+            if (data instanceof FusionReactorMultiblockData) {
+                return CircuitBoardMachineProfile.POWER_MULTIBLOCK;
+            }
+        }
+        return CircuitBoardMachineProfile.UNSUPPORTED;
     }
 }

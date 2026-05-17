@@ -1,20 +1,6 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://modmaven.dev/' }
-        maven { url 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
-    }
-}
-
 plugins {
     id 'net.minecraftforge.gradle' version '6.+'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
 
 version = "${mod_version}"
 group = "${mod_group_id}"

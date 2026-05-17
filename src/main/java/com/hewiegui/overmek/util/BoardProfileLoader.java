@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.util;
 
 import com.hewiegui.overmek.config.OverMekConfig;
+import com.hewiegui.overmek.item.CircuitBoardItem;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
@@ -65,6 +66,9 @@ public final class BoardProfileLoader {
         if (supportProfile == null || !supportProfile.isSupported()) {
             return BoardEffectProfile.unsupported();
         }
+        if (stack.isEmpty() || !(stack.getItem() instanceof CircuitBoardItem board) || board.getChannel() != supportProfile.acceptedChannel()) {
+            return BoardEffectProfile.unsupported();
+        }
         return getProfile(supportProfile.machineProfile(), stack);
     }
 
@@ -104,7 +108,7 @@ public final class BoardProfileLoader {
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.FISSION, new BoardEffectProfile(CircuitBoardChannel.FISSION, 0, 2.2D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 3.8D, 1.0D, 1.0D, 1.0D, 2.7D, 1.0D, 260, 2));
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.POWER_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.POWER_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 3.0D, 3.6D, 4.2D, 5.8D, 4.2D, 1.0D, 1.0D, 1.0D, 220, 2));
         MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.EVAPORATION_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.EVAPORATION_MULTIBLOCK, 0, 1.0D, 1.0D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D, 1.0D, 1.0D, 5.0D, 1.0D, 1.0D, 1200, 1));
-        MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.SPS_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, 0.68D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 4.8D, 1.0D, 1.0D, 4.6D, 2.8D, 4.2D, 3200, 2));
+        MULTIBLOCK_PROFILES.put(CircuitBoardMachineProfile.SPS_MULTIBLOCK, new BoardEffectProfile(CircuitBoardChannel.SPS_MULTIBLOCK, 0, 1.0D, 0.95D, 1.0D, 1.0D, 0.0D, 0.0D, 1.0D, 1.0D, 4.8D, 1.0D, 1.0D, 6.0D, 2.8D, 3.0D, 3200, 2));
         loaded = true;
     }
 

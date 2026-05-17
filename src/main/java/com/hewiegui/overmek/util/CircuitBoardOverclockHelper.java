@@ -145,23 +145,28 @@ public final class CircuitBoardOverclockHelper {
     public static void tickWarmup(TileEntityMekanism tile, boolean active) {
         ICircuitBoardHolder holder = getHolder(tile);
         if (holder == null) {
+            OverMekDebug.logWarmup(tile, active, 0, 0, BoardEffectProfile.unsupported(), "no-holder");
             return;
         }
+        int before = holder.getWarmupProgress();
         if (!holder.hasCircuitBoard() || !OverMekConfig.isWarmupEnabled()) {
             holder.setWarmupProgress(0);
             holder.setGeneratorFuelRemainder(0.0D);
+            OverMekDebug.logWarmup(tile, active, before, holder.getWarmupProgress(), BoardEffectProfile.unsupported(), holder.hasCircuitBoard() ? "warmup-disabled" : "no-board");
             return;
         }
         BoardEffectProfile profile = BoardProfileLoader.getInstalledProfile(CircuitBoardProfileHelper.getSupportProfile(tile), holder.getCircuitBoard());
         if (!profile.isSupported() || profile.warmupTicks() <= 0) {
             holder.setWarmupProgress(0);
             holder.setGeneratorFuelRemainder(0.0D);
+            OverMekDebug.logWarmup(tile, active, before, holder.getWarmupProgress(), profile, profile.isSupported() ? "no-warmup-ticks" : "unsupported-profile");
             return;
         }
         int updatedWarmup = active
             ? Math.min(profile.warmupTicks(), holder.getWarmupProgress() + 1)
             : Math.max(0, holder.getWarmupProgress() - Math.max(1, profile.warmupCooldown()));
         holder.setWarmupProgress(updatedWarmup);
+        OverMekDebug.logWarmup(tile, active, before, updatedWarmup, profile, "updated");
     }
 
     public static void resetWarmup(TileEntityMekanism tile) {
@@ -170,6 +175,24 @@ public final class CircuitBoardOverclockHelper {
             holder.setWarmupProgress(0);
             holder.setGeneratorFuelRemainder(0.0D);
         }
+    }
+
+    public static boolean completeWarmup(TileEntityMekanism tile) {
+        ICircuitBoardHolder holder = getHolder(tile);
+        if (holder == null || !holder.hasCircuitBoard() || !OverMekConfig.isWarmupEnabled()) {
+            OverMekDebug.logWarmup(tile, true, holder == null ? 0 : holder.getWarmupProgress(), holder == null ? 0 : holder.getWarmupProgress(), BoardEffectProfile.unsupported(), holder == null ? "complete-no-holder" : holder.hasCircuitBoard() ? "complete-warmup-disabled" : "complete-no-board");
+            return false;
+        }
+        int before = holder.getWarmupProgress();
+        BoardEffectProfile profile = BoardProfileLoader.getInstalledProfile(CircuitBoardProfileHelper.getSupportProfile(tile), holder.getCircuitBoard());
+        if (!profile.isSupported() || profile.warmupTicks() <= 0) {
+            OverMekDebug.logWarmup(tile, true, before, before, profile, profile.isSupported() ? "complete-no-warmup-ticks" : "complete-unsupported-profile");
+            return false;
+        }
+        holder.setWarmupProgress(profile.warmupTicks());
+        tile.setChanged();
+        OverMekDebug.logWarmup(tile, true, before, profile.warmupTicks(), profile, "complete");
+        return true;
     }
 
     public static int getAdjustedTicksRequired(TileEntityMekanism tile, int baseTicksRequired) {
