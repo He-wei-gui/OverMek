@@ -26,3 +26,20 @@ forge*changelog.txt
 
 .claude/
 CLAUDE.md
+
+# Unpacked jar artifacts / inspection leftovers at project root
+/META-INF/
+/assets/
+/data/
+/pack.mcmeta
+/wthit_plugins.json
+
+# Third-party dev jars
+/libs/
+
+# Source art assets
+/overmek.psd
+
+# Texture backup folders
+/src/main/resources/assets/overmek/textures/item_backup/
+/src/main/resources/assets/overmek/textures/item/spritesheet_preview.png

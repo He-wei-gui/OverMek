@@ -44,6 +44,14 @@ repositories {
         name = "BlameJared Maven"
         url = "https://maven.blamejared.com/"
     }
+    maven {
+        name = "Modrinth Maven"
+        url = "https://api.modrinth.com/maven"
+        content { includeGroup "maven.modrinth" }
+    }
+    flatDir {
+        dir 'libs'
+    }
 }
 
 dependencies {
@@ -51,6 +59,18 @@ dependencies {
 
     // Use the full Mekanism bundle so generator classes are available at compile time.
     implementation fg.deobf("mekanism:Mekanism:1.20.1-10.4.16.80:all")
+
+    // AE2 (Applied Energistics 2) - from local libs
+    compileOnly fg.deobf("libs:appliedenergistics2-forge:${ae2_version}")
+
+    // Extended AE - AE2 addon
+    compileOnly fg.deobf("libs:ExtendedAE:" + extended_ae_version)
+
+    // Applied Mekanistics - AE2 + Mekanism integration
+    compileOnly fg.deobf("libs:Applied-Mekanistics:" + applied_mekanistics_version)
+
+    // Mekanism More Machine - local runtime for dev verification
+    runtimeOnly fg.deobf("libs:mekmm-1.20.1-dev:1.2.1")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

@@ -17,9 +17,50 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
+
 public final class CircuitBoardOverclockHelper {
 
+    private static final ConcurrentHashMap<Class<?>, Method> UPDATE_MAX_OUTPUT_CACHE = new ConcurrentHashMap<>();
+    private static final Method UPDATE_MAX_OUTPUT_ABSENT;
+
+    static {
+        try {
+            UPDATE_MAX_OUTPUT_ABSENT = Object.class.getDeclaredMethod("toString");
+        } catch (NoSuchMethodException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
     private CircuitBoardOverclockHelper() {
+    }
+
+    /**
+     * 反射调用 meklg 发电机父类（TileEntityMoreGenerator）的 protected 方法 updateMaxOutputRaw。
+     * 因为 @Pseudo 模式下 Mixin 的 @Shadow 不会自动沿继承链查找方法，所以必须用反射。
+     */
+    public static void tryUpdateGeneratorMaxOutput(TileEntityMekanism tile, FloatingLong rate) {
+        Method method = UPDATE_MAX_OUTPUT_CACHE.computeIfAbsent(tile.getClass(), cls -> {
+            Class<?> current = cls;
+            while (current != null && current != Object.class) {
+                try {
+                    Method m = current.getDeclaredMethod("updateMaxOutputRaw", FloatingLong.class);
+                    m.setAccessible(true);
+                    return m;
+                } catch (NoSuchMethodException ignored) {
+                    current = current.getSuperclass();
+                }
+            }
+            return UPDATE_MAX_OUTPUT_ABSENT;
+        });
+        if (method == UPDATE_MAX_OUTPUT_ABSENT) {
+            return;
+        }
+        try {
+            method.invoke(tile, rate);
+        } catch (ReflectiveOperationException ignored) {
+        }
     }
 
     public static boolean canApplyCircuitBoardEffects(BlockEntity blockEntity) {
@@ -284,7 +325,7 @@ public final class CircuitBoardOverclockHelper {
         if (!profile.isSupported() || overclockCount <= 0) {
             return 1.0D;
         }
-        double fullSpeed = profile.getSpeedMultiplier(overclockCount, tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), 1.0D);
+        double fullSpeed = profile.getSpeedMultiplier(overclockCount, isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), 1.0D);
         double actualSpeed = getActualSpeedMultiplier(tile);
         double numerator = Math.max(0.0D, actualSpeed - 1.0D);
         double denominator = Math.max(0.0001D, fullSpeed - 1.0D);
@@ -310,7 +351,7 @@ public final class CircuitBoardOverclockHelper {
         if (!profile.isSupported() || overclockCount <= 0) {
             return 1.0D;
         }
-        return profile.getEnergyUsageMultiplier(overclockCount, tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), getActualWarmupRatio(tile, stack), OverMekConfig.getOverclockEnergyMultiplier());
+        return profile.getEnergyUsageMultiplier(overclockCount, isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), getActualWarmupRatio(tile, stack), OverMekConfig.getOverclockEnergyMultiplier());
     }
 
     public static double getDisplayedEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
@@ -345,7 +386,7 @@ public final class CircuitBoardOverclockHelper {
             return 1.0D;
         }
         return switch (supportProfile.machineProfile()) {
-            case PROCESSING -> profile.getSpeedMultiplier(getCircuitBoardOverclockCount(stack), tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), 1.0D);
+            case PROCESSING -> profile.getSpeedMultiplier(getCircuitBoardOverclockCount(stack), isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), 1.0D);
             case GENERATOR -> profile.generationMultiplier();
             case FISSION -> profile.speedMultiplier();
             case POWER_MULTIBLOCK -> profile.generationMultiplier();
@@ -494,7 +535,7 @@ public final class CircuitBoardOverclockHelper {
         if (!OverMekConfig.isOverclockEnabled() || !canApplyCircuitBoardEffects(tile)) {
             return 1.0D;
         }
-        if (tile instanceof TileEntityFactory<?> && !OverMekConfig.isFactoryOverclockEnabled()) {
+        if (isFactoryLike(tile) && !OverMekConfig.isFactoryOverclockEnabled()) {
             return 1.0D;
         }
         return CircuitBoardProfileHelper.getMachineProfile(tile) == CircuitBoardMachineProfile.PROCESSING
@@ -517,5 +558,9 @@ public final class CircuitBoardOverclockHelper {
     private static int getWarmupTicks(TileEntityMekanism tile, ItemStack stack) {
         BoardEffectProfile profile = BoardProfileLoader.getInstalledProfile(CircuitBoardProfileHelper.getSupportProfile(tile), stack);
         return profile.isSupported() ? profile.warmupTicks() : 0;
+    }
+
+    private static boolean isFactoryLike(TileEntityMekanism tile) {
+        return tile instanceof TileEntityFactory<?> || JerryAddonCompat.isMoreMachineFactory(tile);
     }
 }

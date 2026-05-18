@@ -21,7 +21,7 @@ public final class ProcessingBoardService {
         if (!profile.isSupported()) {
             return 1.0D;
         }
-        return profile.getSpeedMultiplier(holder.getOverclockCount(), tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), getWarmupRatio(tile, profile));
+        return profile.getSpeedMultiplier(holder.getOverclockCount(), isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), getWarmupRatio(tile, profile));
     }
 
     public static double getDisplayedSpeedMultiplier(TileEntityMekanism tile, ItemStack stack) {
@@ -30,7 +30,7 @@ public final class ProcessingBoardService {
         if (!profile.isSupported() || overclockCount <= 0) {
             return 1.0D;
         }
-        return profile.getSpeedMultiplier(overclockCount, tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack));
+        return profile.getSpeedMultiplier(overclockCount, isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack));
     }
 
     public static double getDisplayedOverclockBonus(TileEntityMekanism tile, ItemStack stack) {
@@ -46,7 +46,7 @@ public final class ProcessingBoardService {
         if (!profile.isSupported()) {
             return 1.0D;
         }
-        return profile.getEnergyUsageMultiplier(holder.getOverclockCount(), tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), getWarmupRatio(tile, profile), OverMekConfig.getOverclockEnergyMultiplier());
+        return profile.getEnergyUsageMultiplier(holder.getOverclockCount(), isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), getWarmupRatio(tile, profile), OverMekConfig.getOverclockEnergyMultiplier());
     }
 
     public static double getDisplayedEnergyUsageMultiplier(TileEntityMekanism tile, ItemStack stack) {
@@ -55,7 +55,7 @@ public final class ProcessingBoardService {
         if (!profile.isSupported() || overclockCount <= 0) {
             return 1.0D;
         }
-        return profile.getEnergyUsageMultiplier(overclockCount, tile instanceof TileEntityFactory<?>, OverMekConfig.getMaxOverclockBonus(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack), OverMekConfig.getOverclockEnergyMultiplier());
+        return profile.getEnergyUsageMultiplier(overclockCount, isFactoryLike(tile), OverMekConfig.getMaxOverclockBonus(), CircuitBoardOverclockHelper.getDisplayedWarmupRatio(tile, stack), OverMekConfig.getOverclockEnergyMultiplier());
     }
 
     public static double getEnergyCapacityMultiplier(ItemStack stack) {
@@ -83,5 +83,9 @@ public final class ProcessingBoardService {
     private static double getWarmupRatio(TileEntityMekanism tile, BoardEffectProfile profile) {
         ICircuitBoardHolder holder = BoardHostResolver.resolveHolder(tile);
         return holder == null ? 1.0D : holder.getWarmupRatio(profile.warmupTicks());
+    }
+
+    private static boolean isFactoryLike(TileEntityMekanism tile) {
+        return tile instanceof TileEntityFactory<?> || JerryAddonCompat.isMoreMachineFactory(tile);
     }
 }

@@ -1,6 +1,7 @@
 package com.hewiegui.overmek.capability;
 
 import com.hewiegui.overmek.util.BoardHostResolver;
+import com.hewiegui.overmek.util.JerryAddonCompat;
 import com.hewiegui.overmek.util.OverMekLog;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
@@ -20,8 +21,7 @@ public class AttachCapabilityHandler {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         BlockEntity be = event.getObject();
-        if (be.getClass().getName().startsWith("mekanism.common.tile")
-            || be.getClass().getName().startsWith("mekanism.generators.common.tile")) {
+        if (isSupportedTilePackage(be)) {
             OverMekLog.debug("OverMek attaching circuit board capability to {}", be.getClass().getName());
             event.addCapability(CIRCUIT_BOARD_CAP, new CircuitBoardHolder(be));
         }
@@ -39,8 +39,7 @@ public class AttachCapabilityHandler {
         }
 
         BlockEntity be = level.getBlockEntity(event.getPos());
-        if (be == null || !(be.getClass().getName().startsWith("mekanism.common.tile")
-            || be.getClass().getName().startsWith("mekanism.generators.common.tile"))) {
+        if (be == null || !isSupportedTilePackage(be)) {
             return;
         }
 
@@ -56,5 +55,12 @@ public class AttachCapabilityHandler {
         if (host != be) {
             host.setChanged();
         }
+    }
+
+    private static boolean isSupportedTilePackage(BlockEntity be) {
+        String className = be.getClass().getName();
+        return className.startsWith("mekanism.common.tile")
+            || className.startsWith("mekanism.generators.common.tile")
+            || JerryAddonCompat.isJerryAddonTile(be);
     }
 }

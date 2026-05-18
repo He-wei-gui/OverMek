@@ -61,8 +61,12 @@ public final class CircuitBoardProfileHelper {
         } else if (blockEntity instanceof TileEntitySPSCasing
             || blockEntity instanceof TileEntitySuperchargedCoil) {
             machineProfile = CircuitBoardMachineProfile.SPS_MULTIBLOCK;
+        } else if (JerryAddonCompat.isMoreGenerator(blockEntity)) {
+            machineProfile = CircuitBoardMachineProfile.GENERATOR;
         } else if (GeneratorBoardService.isSupportedGenerator(tile)) {
             machineProfile = CircuitBoardMachineProfile.GENERATOR;
+        } else if (JerryAddonCompat.isMoreMachineFactory(blockEntity)) {
+            machineProfile = CircuitBoardMachineProfile.PROCESSING;
         } else if (blockEntity instanceof TileEntityRecipeMachine<?> || blockEntity instanceof TileEntityFactory<?>) {
             machineProfile = CircuitBoardMachineProfile.PROCESSING;
         } else {

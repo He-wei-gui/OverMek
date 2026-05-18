@@ -386,7 +386,13 @@ public final class OverMekConfig {
                     "Blacklist entries override the whitelist.",
                     "Entries may be full class names, simple class names, or wildcard patterns."
                 )
-                .defineListAllowEmpty(List.of("denyList"), List::of, value -> value instanceof String);
+                .defineListAllowEmpty(List.of("denyList"), () -> List.of(
+                    "com.jerry.mekmm.common.tile.machine.TileEntityAmbientGasCollector",
+                    "com.jerry.mekmm.common.tile.TileEntityAuthorDoll",
+                    "com.jerry.mekmm.common.tile.TileEntityModelerDoll",
+                    "com.jerry.mekmm.common.tile.TileEntityWirelessChargingStation",
+                    "com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank"
+                ), value -> value instanceof String);
 
             builder.pop();
             builder.push("tierProfiles");

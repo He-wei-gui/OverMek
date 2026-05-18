@@ -4,6 +4,7 @@ import com.hewiegui.overmek.capability.ICircuitBoardHolder;
 import com.hewiegui.overmek.item.CircuitBoardItem;
 import com.hewiegui.overmek.util.BoardHostResolver;
 import com.hewiegui.overmek.util.CircuitBoardProfileHelper;
+import com.hewiegui.overmek.util.JerryAddonCompat;
 import com.hewiegui.overmek.util.OverMekDebug;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,7 +41,7 @@ public class CircuitBoardInstallHandler {
         }
 
         String className = be.getClass().getName();
-        if (!className.startsWith("mekanism.common.tile") && !className.startsWith("mekanism.generators.common.tile")) {
+        if (!className.startsWith("mekanism.common.tile") && !className.startsWith("mekanism.generators.common.tile") && !JerryAddonCompat.isJerryAddonTile(be)) {
             return;
         }
 

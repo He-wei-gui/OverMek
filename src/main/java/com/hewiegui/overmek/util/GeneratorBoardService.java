@@ -15,11 +15,11 @@ public final class GeneratorBoardService {
     }
 
     public static boolean isSupportedGenerator(TileEntityMekanism tile) {
-        return tile instanceof TileEntityGenerator;
+        return tile instanceof TileEntityGenerator || JerryAddonCompat.isMoreGenerator(tile);
     }
 
     public static boolean isFuelGenerator(TileEntityMekanism tile) {
-        return tile instanceof TileEntityHeatGenerator || tile instanceof TileEntityBioGenerator || tile instanceof TileEntityGasGenerator;
+        return tile instanceof TileEntityHeatGenerator || tile instanceof TileEntityBioGenerator || tile instanceof TileEntityGasGenerator || JerryAddonCompat.isMoreFuelGenerator(tile);
     }
 
     public static double getEffectiveGenerationMultiplier(TileEntityMekanism tile) {

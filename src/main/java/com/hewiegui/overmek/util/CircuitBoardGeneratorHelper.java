@@ -18,11 +18,12 @@ public final class CircuitBoardGeneratorHelper {
 
     public static boolean isSupportedGenerator(TileEntityMekanism tile) {
         return CircuitBoardProfileHelper.getMachineProfile(tile) == CircuitBoardMachineProfile.GENERATOR
-            && (tile instanceof TileEntityGenerator || tile instanceof TileEntitySolarGenerator || tile instanceof TileEntityAdvancedSolarGenerator || tile instanceof TileEntityWindGenerator);
+            && (tile instanceof TileEntityGenerator || tile instanceof TileEntitySolarGenerator || tile instanceof TileEntityAdvancedSolarGenerator || tile instanceof TileEntityWindGenerator
+                || JerryAddonCompat.isMoreGenerator(tile));
     }
 
     public static boolean isFuelGenerator(TileEntityMekanism tile) {
-        return tile instanceof TileEntityHeatGenerator || tile instanceof TileEntityBioGenerator || tile instanceof TileEntityGasGenerator;
+        return tile instanceof TileEntityHeatGenerator || tile instanceof TileEntityBioGenerator || tile instanceof TileEntityGasGenerator || JerryAddonCompat.isMoreFuelGenerator(tile);
     }
 
     public static double getDisplayedGenerationMultiplier(TileEntityMekanism tile, ItemStack stack) {
